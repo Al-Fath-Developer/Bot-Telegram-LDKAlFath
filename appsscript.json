@@ -1,0 +1,28 @@
+{
+  "timeZone": "Asia/Jakarta",
+  "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "lumpia",
+        "libraryId": "1Yo6vQRwjG5Gl9jeEF0g2tBTUa0XN5MyT4G_HeDpRr9DvabxhRcSdhPNj",
+        "version": "10"
+      },
+      {
+        "userSymbol": "WizardDua",
+        "libraryId": "1qh5YcQ6JIQcBj97jouAzZmjuuZnTybJVXvyKNs07SobcTPxu-sIXU87R",
+        "version": "2"
+      },
+      {
+        "userSymbol": "Builder",
+        "libraryId": "1CdmLLLtBE1wZ2oxdwYPYMdPIXZLVtdqGEm7k-01JTuAW3Q1-v3DFto-I",
+        "version": "2"
+      }
+    ]
+  },
+  "webapp": {
+    "executeAs": "USER_DEPLOYING",
+    "access": "ANYONE_ANONYMOUS"
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8"
+}

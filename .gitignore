@@ -1,0 +1,9 @@
+# Folder
+node_modules/*
+
+# File
+.clasp.json
+1. debug.js
+deploy.sh
+0. env.js
+0. env.js
