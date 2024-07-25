@@ -110,7 +110,8 @@ class AYRepository{
         }
 
         try {
-            const dataAyat  = JSON.parse(UrlFetchApp.fetch("https://api.alquran.cloud/v1/ayah/" +checkPointNgaji+"/ar.shaatree" ))
+            const dataAyat = JSON.parse(ExternalDataUtils.fetchDataWithCache("https://api.alquran.cloud/v1/ayah/" +checkPointNgaji+"/ar.shaatree", "ayat_" +checkPointNgaji, 200))
+            // const dataAyat  = JSON.parse(UrlFetchApp.fetch("https://api.alquran.cloud/v1/ayah/" +checkPointNgaji+"/ar.shaatree" ))
             
             if (dataAyat["code"] == 200){
                 SpreadsheetUtils.appendRowDataToExternalSpreadsheet(this.spreadsheet_link, this.sheet_name_ngaji, [new Date(), id_telegram, no_surah, no_ayat])
@@ -130,7 +131,8 @@ class AYRepository{
      */
     getAyat(no_ayat){
         try {
-            const dataAyat  = JSON.parse(UrlFetchApp.fetch("https://api.alquran.cloud/v1/ayah/" +no_ayat +"/ar.shaatree"))
+            const dataAyat = JSON.parse(ExternalDataUtils.fetchDataWithCache("https://api.alquran.cloud/v1/ayah/" +no_ayat +"/ar.shaatree", "ayat_" +no_ayat, 200))
+            // const dataAyat  = JSON.parse(UrlFetchApp.fetch("https://api.alquran.cloud/v1/ayah/" +no_ayat +"/ar.shaatree"))
             return { audio: dataAyat['data']['audio'] || dataAyat['data']['audioSecondary'], page: dataAyat['data']['page'], ayat: dataAyat["data"]["text"], surah: dataAyat["data"]["surah"]["name"], no_ayat : dataAyat["data"]["numberInSurah"], juz:dataAyat['data']['juz'], no_ayat_in_alquran: dataAyat["data"]["number"]} 
         } catch (error) {
             return error.message
@@ -145,8 +147,10 @@ class AYRepository{
     getPageAlQuran(page){
         try {
             let i = 0
-            const dataLatin = JSON.parse(UrlFetchApp.fetch("https://api.alquran.cloud/v1/page/" +page +"/en.transliteration"))
-            const dataAyat  = JSON.parse(UrlFetchApp.fetch("https://api.alquran.cloud/v1/page/" +page+"/ar.shaatree" ))
+            const dataLatin = JSON.parse(ExternalDataUtils.fetchDataWithCache("https://api.alquran.cloud/v1/page/" +page +"/en.transliteration", "latin_page_" +page, 200))
+            // const dataLatin = JSON.parse(UrlFetchApp.fetch("https://api.alquran.cloud/v1/page/" +page +"/en.transliteration"))
+            const dataAyat  = JSON.parse(ExternalDataUtils.fetchDataWithCache("https://api.alquran.cloud/v1/page/" +page+"/ar.shaatree", "page_" +page, 200))
+            // const dataAyat  = JSON.parse(UrlFetchApp.fetch("https://api.alquran.cloud/v1/page/" +page+"/ar.shaatree" ))
             const result = {}
             result.juz = dataAyat['data']['ayahs'][0]['juz']
             result.page = dataAyat['data']['number']

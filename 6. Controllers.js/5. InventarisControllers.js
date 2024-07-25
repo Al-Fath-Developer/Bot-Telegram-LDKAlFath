@@ -13,10 +13,10 @@ class InventarisControllers{
         return new Scene('konfirmasi_inventaris_sekre',
         (ctx)=>{
 
-            const pesan_bot = ctx.reply(
+            const pesan_bot = ctx.replyWithHTML(
 `'📷📷Konfirmasi Inventaris Sekretariat Al-Fath
 
-
+Sebelum kamu melakukan konfirmasi, silahkan update data yang ada disini pada <a href="${getMapENV('INVENTARIS_SPREADSHEET_LINK')}">sheet status inventaris</a> terlebih dahulu.
 
 Silahkan konfirmasi berupa dokumentasi inventaris dengan ketentuan sebagai berikut:
 
@@ -35,6 +35,12 @@ Silahkan konfirmasi berupa dokumentasi inventaris dengan ketentuan sebagai berik
 - tulis "batal" (tanpa tanda petik) pada kolom chat jika ingin membatalkan proses
 
 `)
+UserUtils.registerRequired(ctx)
+ctx.data = {}
+ctx.data.email = ctx.currentUser.email
+ctx.data.nim = ctx.currentUser.nim
+ctx.data.nama_lengkap = ctx.currentUser.nama_lengkap
+FileUtils.giveAccessToEmail(getMapENV('INVENTARIS_SPREADSHEET_LINK'), ctx.currentUser.email)
 
             return ctx.wizard.next();
         } ,
@@ -53,42 +59,18 @@ Silahkan konfirmasi berupa dokumentasi inventaris dengan ketentuan sebagai berik
                     return ctx.wizard.leave()
                     
                 }
-
-                if (ctx.update.message.photo != null){
-                    
-                    
-                    const idx_best_qulity = ctx.update.message.photo.length - 1;
-                    const id_photo = ctx.update.message.photo[idx_best_qulity].file_id;
-                    const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, id_photo);
-                    const caption = ctx.message.caption || "";                    
-                    
-                    const drive_url = this.inventarisServices.addKonfirmasiSekre(ctx.from.id,ctx.from.username,url_file, caption)
-
-                ctx.reply("Terima kasih sudah konfirmasi, lah kok ilang? tenang, foto nya bisa diakses disini\n" , {
-                    reply_markup: markup.inlineKeyboard([[button.url(caption, drive_url)]])
+                const judul = ctx.message.caption || ctx.update.message?.document?.file_name|| new Date().toLocaleString();                    
+                const drive_url = FileUtils.getDriveURLFromCtx(ctx, getMapENV('INVENTARIS_FOLDER_ID'), judul, ctx.data.email)
+                this.inventarisServices.addKonfirmasiSekre([ctx.data.nim, ctx.data.nama_lengkap], drive_url, judul)
+                ctx.reply("Terima kasih sudah konfirmasi, lah kok ilang? tenang, bukti konfirmasi nya bisa diakses disini\n" , {
+                    reply_markup: markup.inlineKeyboard([[button.url(judul, drive_url)]])
 
                 })
-                ctx.deleteMessage()
-                
-            }else if(ctx.update.message.document != null){
-                const id_document = ctx.update.message.document.file_id;
-                const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, id_document);
-                const filename = ctx.update.message.document.file_name;
-                const drive_url = this.inventarisServices.addKonfirmasiSekre(ctx.from.id,ctx.from.username,url_file, filename)
-                ctx.reply("Terima kasih sudah konfirmasi, lah kok ilang? tenang, dokumen nya bisa diakses disini\n" , {
-                    reply_markup: markup.inlineKeyboard([[button.url(filename, drive_url)]])
-
-                })
-                ctx.deleteMessage()
-}
-            
-            else{
-                ctx.reply("Maaf, hanya bisa menerima file berupa foto atau dokumen")
-            }
+                ctx.deleteMessage() 
                 ctx.deleteMessage(loading_message.result.message_id)
+                return ctx.wizard.leave()
 
             
-            return ctx.wizard.leave()
         }
         catch (error) {
             errorLog(error)

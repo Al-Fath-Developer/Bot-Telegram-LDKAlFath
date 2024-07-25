@@ -188,11 +188,11 @@ Juz: ${dataAyat.juz}
         if (ctx.update.callback_query) {
             ctx.editMessageText(message, {
                 parse_mode: "HTML",
-                reply_markup: markup.inlineKeyboard([[button.text("Halaman Sebelumnya", 'prev_page_alquran'), button.text("Halaman Setelahnya", 'next_page_alquran')]])
+                reply_markup: markup.inlineKeyboard([[ button.text("Halaman Setelahnya", 'next_page_alquran'),button.text("Halaman Sebelumnya", 'prev_page_alquran')]])
             });
         } else {
             ctx.replyWithHTML(message, {
-                reply_markup: markup.inlineKeyboard([[button.text("Halaman Sebelumnya", 'prev_page_alquran'), button.text("Halaman Setelahnya", 'next_page_alquran')]])
+                reply_markup: markup.inlineKeyboard([[ button.text("Halaman Setelahnya", 'next_page_alquran'),button.text("Halaman Sebelumnya", 'prev_page_alquran')]])
             });
         }
     }
@@ -223,14 +223,14 @@ Juz: ${dataAyat.juz}
         if (ctx.update.callback_query) {
             ctx.editMessageText(message, {
                 parse_mode: "HTML",
-                reply_markup: markup.inlineKeyboard([[button.text("Halaman Sebelumnya", 'prev_page_alquran'), button.text("Halaman Setelahnya", 'next_page_alquran')],
+                reply_markup: markup.inlineKeyboard([[ button.text("Halaman Setelahnya", 'next_page_alquran'),button.text("Halaman Sebelumnya", 'prev_page_alquran')],
                 [button.text("🔙 Main Menu", 'main_menu')]
             
             ])
             });
         } else {
             ctx.replyWithHTML(message, {
-                reply_markup: markup.inlineKeyboard([[button.text("Halaman Sebelumnya", 'prev_page_alquran'), button.text("Halaman Setelahnya", 'next_page_alquran')]])
+                reply_markup: markup.inlineKeyboard([[ button.text("Halaman Setelahnya", 'next_page_alquran'),button.text("Halaman Sebelumnya", 'prev_page_alquran')]])
             });
         }
     }
@@ -261,7 +261,7 @@ Juz: ${dataAyat.juz}
 
 //         // Ekstrak kode yang mirip menjadi property
 //         this.buttonMarkup = markup.inlineKeyboard([[button.text("Ayat Sebelumnya", 'prev_ayat'), button.text("Ayat Setelahnya", 'next_ayat')]]);
-//         this.pageButtonMarkup = markup.inlineKeyboard([[button.text("Halaman Sebelumnya", 'prev_page_alquran'), button.text("Halaman Setelahnya", 'next_page_alquran')]]);
+//         this.pageButtonMarkup = markup.inlineKeyboard([[ button.text("Halaman Setelahnya", 'next_page_alquran'),button.text("Halaman Sebelumnya", 'prev_page_alquran')]]);
 //         this.basmalah = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
 //         this.processPage = this.processPage.bind(this);
 //     }

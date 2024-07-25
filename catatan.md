@@ -57,3 +57,9 @@ chore(common): update log and data fetch ti use  external spreadsheet
 
 
 ```
+
+```git
+feat(inventaris): menampilkan sheet konfirmasi sekre, memberikan akses sheet, membolehkan konfirmasi menggunakan video
+feat(utils): membuat object untuk mengurus data dari external agar menggunaakan cache
+perf(ay): menggunakan konsep cache ketika pengambilan data
+```

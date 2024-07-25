@@ -2,6 +2,17 @@
  * Kumpulan utilitas untuk menangani operasi file.
  */
 const FileUtils = {
+    giveAccessToEmail(idOrUrl, email)  {
+ const file_id =        FileUtils.extractId(idOrUrl);
+        DriveApp.getFileById(file_id).addEditor(email);
+        
+    },
+     extractId(idOrUrl) {
+        const urlPattern = /[-\w]{25,}/;
+        const match = idOrUrl.match(urlPattern);
+        return match ? match[0] : idOrUrl;
+      },
+      
   /**
      * Mendapatkan URL file dari pesan bot Telegram.
      * @param {string} bot_token - Token bot Telegram.
@@ -27,54 +38,28 @@ const FileUtils = {
     let id = DriveApp.createFile(blob).setName(caption + "|" + username).moveTo(DriveApp.getFolderById(getMapENV('USER_FILES_FOLDER_ID'))).getId();
     return id;
 },
-     getDriveURLFromCtx(ctx, folder_id, file_name) {
-        if(ctx.message.document ){
-
-            const file_id = ctx.message.document.file_id;
+    getDriveURLFromCtx(ctx, folder_id, file_name, email = null) {
+        if(ctx.message.document || ctx.message.photo || ctx.message.audio || ctx.message.video || ctx.message.voice || ctx.message.video_note || ctx.message.animation || ctx.message.sticker){
+            let file_id;
+            
+            if(ctx.message.document) file_id = ctx.message.document.file_id;
+            if(ctx.message.photo) file_id = ctx.message.photo[ctx.message.photo.length - 1].file_id;
+            if(ctx.message.audio) file_id = ctx.message.audio.file_id;
+            if(ctx.message.video) file_id = ctx.message.video.file_id;
+            if(ctx.message.voice) file_id = ctx.message.voice.file_id;
+            if(ctx.message.video_note) file_id = ctx.message.video_note.file_id;
+            if(ctx.message.animation) file_id = ctx.message.animation.file_id;
+            if(ctx.message.sticker) file_id = ctx.message.sticker.file_id;
+            
             const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
             const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
+            if(email){
+                DriveApp.getFileById(drive_id).addEditor(email);
+            }
             return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
-        }else if (ctx.message.photo){
-            const file_id = ctx.message.photo[ctx.message.photo.length - 1].file_id;
-            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
-            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
-            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
-        }else if (ctx.message.audio){
-            const file_id = ctx.message.audio.file_id;
-            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
-            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
-            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
-        }else if (ctx.message.video){
-            const file_id = ctx.message.video.file_id;
-            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
-            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
-            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
-        }else if(ctx.message.voice){
-            const file_id = ctx.message.voice.file_id;
-            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
-            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
-            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
-        }else if(ctx.message.video_note){
-            const file_id = ctx.message.video_note.file_id;
-            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
-            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
-            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
-        }else if(ctx.message.animation){
-            const file_id = ctx.message.animation.file_id;
-            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
-            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
-            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
-        }else if(ctx.message.sticker){
-            const file_id = ctx.message.sticker.file_id;
-            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
-            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
-            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
-        }else {
-            return null
+        } else {
+            return null;
         }
-
-
-        
     }
 
 }

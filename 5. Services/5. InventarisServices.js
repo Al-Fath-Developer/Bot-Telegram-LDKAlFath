@@ -7,15 +7,15 @@ class InventarisServices{
     }
      /**
      *  fungsi untuk menyimpan dokumentasi dan mendapatkan link hasil dokumentasi belajar
-     * @param {number} id_telegram 
+     * @param {Array} nim 
      * @param {string} username 
      * @param {string} url_file 
      * @param {string} caption 
      * @returns string Link drive
      */
-     addKonfirmasiSekre(id_telegram, username, url_file, caption){
-        const arrCaption = TextUtils.pisahKataPertama(caption)
-        return this.inventarisRepository.addKonfirmasiSekre(id_telegram, username, url_file, arrCaption)
+     addKonfirmasiSekre(identitas, url_file, filename){
+        const arrFilename = TextUtils.pisahKataPertama(filename)
+        return this.inventarisRepository.addKonfirmasiSekre(identitas, url_file, arrFilename)
 
     }
 
