@@ -1,9 +1,15 @@
-const soalIsianSingkatRepo = new SoalIsianSingkatRepository()
 /**
  * Kelas yang menyediakan layanan untuk mengelola soal isian singkat.
- */
+*/
 
 class SoalIsianSingkatServices{
+  constructor(){
+        this.soalIsianSingkatRepo = new SoalIsianSingkatRepository()
+        this.getDataSoalLengkapById = this.getDataSoalLengkapById.bind(this)
+        this.addAnswerFromUser = this.addAnswerFromUser.bind(this)
+        this.addAnswerFromGuest = this.addAnswerFromGuest.bind(this)
+
+    }
 
     /**
      * Mengambil data soal bedasarkan id
@@ -11,7 +17,7 @@ class SoalIsianSingkatServices{
      * @returns {SoalIsianSingkat}
      */
     getDataSoalLengkapById(id_soal){
-    const soalIsianSingkatData =     soalIsianSingkatRepo.getDataSoalLengkapById(id_soal)
+    const soalIsianSingkatData =     this.soalIsianSingkatRepo.getDataSoalLengkapById(id_soal)
     return soalIsianSingkatData
         
     
@@ -28,7 +34,7 @@ class SoalIsianSingkatServices{
      */
     addAnswerFromUser(id_telegram, nim, arrAnswer, spreadsheet_hasil_link, sheet_hasil_name){
         const result = [new Date(), id_telegram, nim, ...arrAnswer]
-        const lastRow = soalIsianSingkatRepo.addAnswerFromUser(result,spreadsheet_hasil_link, sheet_hasil_name )
+        const lastRow = this.soalIsianSingkatRepo.addAnswerFromUser(result,spreadsheet_hasil_link, sheet_hasil_name )
         return lastRow
         
     }
@@ -43,8 +49,9 @@ class SoalIsianSingkatServices{
      */
       addAnswerFromGuest(id_telegram, username, arrAnswer, spreadsheet_hasil_link, sheet_hasil_name){
         const result = [new Date(), id_telegram, username, ...arrAnswer]
-        const lastRow = soalIsianSingkatRepo.addAnswerFromUser(result,spreadsheet_hasil_link, sheet_hasil_name )
+        const lastRow = this.soalIsianSingkatRepo.addAnswerFromUser(result,spreadsheet_hasil_link, sheet_hasil_name )
         return lastRow
         
     }
 }
+Logger.log("Loaded SoalIsianSingkatServices" + (new Date() - startTime) + "ms")

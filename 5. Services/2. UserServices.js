@@ -1,8 +1,17 @@
 /**
  * Objek untuk mengelola data pengguna.
  */
-const userRepository = new UserRepository() 
 class  UserServices  {
+    constructor(){
+       this.userRepository = new UserRepository() 
+       this.checkUserExist = this.checkUserExist.bind(this)
+         this.createNewUser = this.createNewUser.bind(this)
+            this.getUserInfoById = this.getUserInfoById.bind(this)
+            this.updateDataUserById = this.updateDataUserById.bind(this)
+            this.getRawUserByNIM = this.getRawUserByNIM.bind(this)
+            
+
+    }
 
     /**
      * Menambah user baru meelakui registrasi.
@@ -25,7 +34,7 @@ class  UserServices  {
         // Menambah user baru ke notifikasi LMS
         (new AYServices()).addNewUser(id_telegram, nim)
        // menyimpan user baru
-        return userRepository.createNewUser({id_telegram, nama_lengkap, nama_panggilan, nim, jenis_kelamin, email, angkatan, fakultas, departemen, wilayah, amanah})
+        return this.userRepository.createNewUser({id_telegram, nama_lengkap, nama_panggilan, nim, jenis_kelamin, email, angkatan, fakultas, departemen, wilayah, amanah})
     }
 
     /**
@@ -34,7 +43,7 @@ class  UserServices  {
      * @returns {boolean} - True jika pengguna sudah ada, false jika tidak.
      */
     checkUserExist(id_telegram) {
-        return userRepository.isExist(id_telegram);
+        return this.userRepository.isExist(id_telegram);
     }
 
     /**
@@ -43,7 +52,7 @@ class  UserServices  {
      * @returns {User}  - Informasi pengguna yang ditemukan.
      */
     getUserInfoById(id_telegram) {
-       return userRepository.findById(id_telegram)
+       return this.userRepository.findById(id_telegram)
     }
     
     /**
@@ -64,7 +73,7 @@ class  UserServices  {
 
      */
     updateDataUserById(id_telegram,{ nama_lengkap, nama_panggilan, nim, jenis_kelamin, email, angkatan, fakultas, departemen, wilayah, amanah}) {
-        const oldDataUser = userRepository.findById(id_telegram)
+        const oldDataUser = this.userRepository.findById(id_telegram)
         if(oldDataUser){
             const newDataUser = {
                 id_telegram: id_telegram,
@@ -80,10 +89,14 @@ class  UserServices  {
                 amanah: amanah == null?oldDataUser.amanah: amanah,
 
             }
-            return userRepository.updateUser(newDataUser)
+            return this.userRepository.updateUser(newDataUser)
         }
         return "data nya ga ketemu?" + id_telegram
         
+    }
+    getRawUserByNIM(nim){
+        nim = Number(nim)
+        return this.userRepository.getRawUserByNIM(nim)
     }
     
     
@@ -104,3 +117,5 @@ class  UserServices  {
      * @property {string} wilayah - berisi pusat / fakultas
      * @property {string} amanah - berisi amanah dari kader
  */
+
+Logger.log("Loaded UserServices.js" + (new Date() - startTime) + "ms")

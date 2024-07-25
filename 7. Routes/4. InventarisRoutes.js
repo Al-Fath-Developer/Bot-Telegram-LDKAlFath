@@ -5,3 +5,4 @@ bot.cmd("konfirmasiinventaris", (ctx)=>{
 
  
 })
+Logger.log("Loaded InventarisRoutes.js" + (new Date() - startTime) + "ms")

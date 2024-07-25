@@ -1,7 +1,8 @@
 class SoalIsianSingkatRepository{
     constructor (){
-        this.sheet_name = getENV('SOAL_ISIAN_SINGKAT_SHEET_NAME')
-        this.sheet_range = getENV('SOAL_ISIAN_SINGKAT_SHEET_RANGE')
+        this.spreadsheet_link = getMapENV('SOAL_ISIAN_SINGKAT_SPREADSHEET_LINK')
+        this.sheet_name = getMapENV('SOAL_ISIAN_SINGKAT_SHEET_NAME')
+        this.sheet_range = getMapENV('SOAL_ISIAN_SINGKAT_SHEET_RANGE')
     }
 
     /**
@@ -10,7 +11,8 @@ class SoalIsianSingkatRepository{
      * @returns {SoalIsianSingkat}
      */
     getDataSoalLengkapById(id_soal){
-        const arrData = SpreadsheetUtils.readEntryById(id_soal, this.sheet_name, this.sheet_range,true);
+        const arrData = SpreadsheetUtils.readEntryByIdFromExternalSpreadsheet(id_soal,this.spreadsheet_link, this.sheet_name, this.sheet_range,true);
+        
         if (arrData != null){
 
             return new SoalIsianSingkatBuilder()
@@ -18,6 +20,7 @@ class SoalIsianSingkatRepository{
             .setTemplatePertanyaan(arrData[1])
         .setSpreadsheetHasilLink(arrData[2])
         .setSheetHasilName(arrData[3])
+        .setBuktiLokasi(arrData[4])
         .build()
     }else{
         return null
@@ -41,3 +44,4 @@ class SoalIsianSingkatRepository{
     }
     
 }
+Logger.log("Loaded SoalIsianSingkatRepository" + (new Date() - startTime) + "ms")

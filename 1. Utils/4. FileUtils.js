@@ -24,7 +24,58 @@ const FileUtils = {
      */
  saveFileToDrive : (url_file, username, caption = "")=> {
     let blob = UrlFetchApp.fetch(url_file).getBlob()
-    let id = DriveApp.createFile(blob).setName(caption + "|" + username).moveTo(folder_user_files).getId();
+    let id = DriveApp.createFile(blob).setName(caption + "|" + username).moveTo(DriveApp.getFolderById(getMapENV('USER_FILES_FOLDER_ID'))).getId();
     return id;
+},
+     getDriveURLFromCtx(ctx, folder_id, file_name) {
+        if(ctx.message.document ){
+
+            const file_id = ctx.message.document.file_id;
+            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
+            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
+            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
+        }else if (ctx.message.photo){
+            const file_id = ctx.message.photo[ctx.message.photo.length - 1].file_id;
+            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
+            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
+            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
+        }else if (ctx.message.audio){
+            const file_id = ctx.message.audio.file_id;
+            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
+            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
+            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
+        }else if (ctx.message.video){
+            const file_id = ctx.message.video.file_id;
+            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
+            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
+            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
+        }else if(ctx.message.voice){
+            const file_id = ctx.message.voice.file_id;
+            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
+            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
+            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
+        }else if(ctx.message.video_note){
+            const file_id = ctx.message.video_note.file_id;
+            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
+            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
+            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
+        }else if(ctx.message.animation){
+            const file_id = ctx.message.animation.file_id;
+            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
+            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
+            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
+        }else if(ctx.message.sticker){
+            const file_id = ctx.message.sticker.file_id;
+            const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, file_id);
+            const drive_id = FileUtils.saveFileToDrive(url_file, ctx.from.username, file_name);
+            return DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(folder_id)).getUrl();
+        }else {
+            return null
+        }
+
+
+        
+    }
+
 }
-}
+Logger.log("Loaded: FileUtils.js" + (new Date() - startTime) + "ms")

@@ -3,7 +3,7 @@
  * Token bot Telegram untuk lingkungan pengembangan
  * @constant {string}
  */
-const token_dev = getENV('BOT_API'); // Token bot harus diisi
+const token_dev = getMapENV('BOT_API'); // Token bot harus diisi
 /**
  * Inisialisasi bot Telegram menggunakan library lumpia
  * @constant {Object}
@@ -28,14 +28,14 @@ const Keyboard = Builder.keyboard;
  * ID log untuk bot
  * @type {number}
  */
-bot.options.log_id = getENV('DEBUG_BOT_ID');
+bot.options.log_id = getMapENV('DEBUG_BOT_ID');
 
 /**
  * Mengatur webhook untuk bot
  * @function
  */
 function setWebHook() {
-  let url = getENV('SCRIPT_URL');
+  let url = getMapENV('SCRIPT_URL');
   let result = bot.telegram.setWebhook(url);
   Logger.log(result);
 }
@@ -77,9 +77,14 @@ function doPost(e) {
     
     
     bot.doPost(e);
+const sheet_process_log = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(getMapENV('LOG_PROCESS_SHEET_NAME'))
+
+    sheet_process_log.appendRow([ startTime,new Date() - startTime,JSON.parse(e.postData.contents)?.message?.from?.id  || "" , Logger.getLog()]);
+
   }
   } catch (error) {
     errorLog(error)
+    
   }
 }
 
@@ -100,3 +105,4 @@ function doPost(e) {
 
 // Jalankan: > (clasp push) -dan (clasp deploy --deploymentId AKfycbyG-foUc2w-h6dbSqU6lu5HMRjCaloK5_dvYaWQe5hQvoOzgIiabVCzGJ1s8mto9Ys)
 
+Logger.log("bot.js berhasil dimuat" + (new Date() - startTime) + "ms");

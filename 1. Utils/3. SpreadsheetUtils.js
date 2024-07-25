@@ -9,6 +9,8 @@
  */
 
 const SpreadsheetUtils = {
+   MasterSpreadsheet : SpreadsheetApp.getActiveSpreadsheet(),
+
 /**
      * Objek indeks untuk mempercepat pencarian.
      * Menyimpan data dengan ID sebagai kunci untuk akses cepat.
@@ -37,7 +39,7 @@ const SpreadsheetUtils = {
     */
     createEntry: (data, sheetName) =>{
         data = SpreadsheetUtils.bulkSanitize(data)
-       const sheet = MasterSpreadsheet.getSheetByName(sheetName);
+       const sheet = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(sheetName);
            
        const lr = sheet.appendRow([...data]).getLastRow();
        SpreadsheetUtils.index[data[0]] = data;
@@ -80,7 +82,7 @@ getDataFromCacheOrSheet: (sheetName, range, useCache = false, identifier = '') =
       }
     }
 
-    const sheet = MasterSpreadsheet.getSheetByName(sheetName);
+    const sheet = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(sheetName);
     const data = sheet.getRange(range).getValues();
     
     if (useCache) {
@@ -104,7 +106,7 @@ updateCache: (sheetName, range, useCache = false, identifier = '') => {
       const cache = CacheService.getScriptCache();
       const cacheKey = SpreadsheetUtils.createCacheKey(sheetName, range, identifier);
       
-      const sheet = MasterSpreadsheet.getSheetByName(sheetName);
+      const sheet = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(sheetName);
       const data = sheet.getRange(range).getValues();
       
       cache.put(cacheKey, JSON.stringify(data), SpreadsheetUtils.CACHE_DURATION);
@@ -128,6 +130,75 @@ updateCache: (sheetName, range, useCache = false, identifier = '') => {
     }
     return null;
 },
+/**
+ * Membaca entri dari spreadsheet eksternal berdasarkan ID.
+ * @param {any} id - ID entri yang dicari.
+ * @param {string} spreadsheetUrl - URL spreadsheet eksternal
+ * @param {string} sheetName - Nama sheet tempat entri disimpan.
+ * @param {string} range - Lokasi range data entri.
+ * @param {boolean} [useCache=false] - Apakah boleh menggunakan cache
+ * @returns {Array|null} - Data entri yang sesuai dengan ID atau null jika tidak ditemukan.
+*/
+readEntryByIdFromExternalSpreadsheet: (id, spreadsheetUrl, sheetName, range, useCache = false) => {
+  const data = SpreadsheetUtils.getDataFromCacheOrSheetInExternalSpreadsheet(spreadsheetUrl, sheetName, range, useCache, id);
+  for (let row of data) {
+    if (row[0] === id) {
+      return row;
+    }
+  }
+  return null;
+},
+
+/**
+ * Mendapatkan data dari cache atau spreadsheet eksternal
+ * @param {string} spreadsheetUrl - URL spreadsheet eksternal
+ * @param {string} sheetName - Nama sheet
+ * @param {string} range - Range data
+ * @param {boolean} [useCache=false] - Apakah boleh menggunakan cache
+ * @param {string|Object} [identifier] - ID atau kriteria pencarian
+ * @returns {Array} - Data dari cache atau spreadsheet eksternal
+ */
+getDataFromCacheOrSheetInExternalSpreadsheet: (spreadsheetUrl, sheetName, range, useCache = false, identifier = '') => {
+  if (useCache) {
+    const cache = CacheService.getScriptCache();
+    const cacheKey = SpreadsheetUtils.createCacheKeyInExternalSpreadsheet(spreadsheetUrl, sheetName, range, identifier);
+
+    let cachedData = cache.get(cacheKey);
+    if (cachedData != null) {
+      return JSON.parse(cachedData);
+    }
+  }
+
+  const externalSpreadsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
+  const sheet = externalSpreadsheet.getSheetByName(sheetName);
+  const data = sheet.getRange(range).getValues();
+
+  if (useCache) {
+    const cache = CacheService.getScriptCache();
+    const cacheKey = SpreadsheetUtils.createCacheKeyInExternalSpreadsheet(spreadsheetUrl, sheetName, range, identifier);
+    cache.put(cacheKey, JSON.stringify(data), SpreadsheetUtils.CACHE_DURATION);
+  }
+
+  return data;
+},
+
+/**
+ * Membuat kunci cache untuk spreadsheet eksternal
+ * @param {string} spreadsheetUrl - URL spreadsheet eksternal
+ * @param {string} sheetName - Nama sheet
+ * @param {string} range - Range data
+ * @param {string|Object} [identifier] - ID atau kriteria pencarian
+ * @returns {string} - Kunci cache
+ */
+createCacheKeyInExternalSpreadsheet: (spreadsheetUrl, sheetName, range, identifier = '') => {
+  let idString = '';
+  if (typeof identifier === 'object') {
+    idString = JSON.stringify(identifier);
+  } else {
+    idString = identifier.toString();
+  }
+  return `${spreadsheetUrl}_${sheetName}_${range}_${idString}`;
+},
 
 /**
  * Memperbarui entri di spreadsheet berdasarkan ID.
@@ -140,7 +211,7 @@ updateCache: (sheetName, range, useCache = false, identifier = '') => {
  updateEntryById: (id, newData, sheetName, range, useCache = false) =>{
     newData = SpreadsheetUtils.bulkSanitize(newData)
 
-    const sheet = MasterSpreadsheet.getSheetByName(sheetName);
+    const sheet = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(sheetName);
     const data = SpreadsheetUtils.getDataFromCacheOrSheet(sheetName, range, useCache, id);
     for (let i = 0; i < data.length; i++) {
         if (data[i][0] === id) {
@@ -160,7 +231,7 @@ updateCache: (sheetName, range, useCache = false, identifier = '') => {
  * @param {boolean} [useCache=false] - Apakah perlu memperbarui cache
 */
  deleteEntryById:(id, sheetName, range, useCache = false) =>{
-    const sheet = MasterSpreadsheet.getSheetByName(sheetName);
+    const sheet = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(sheetName);
     const data = SpreadsheetUtils.getDataFromCacheOrSheet(sheetName, range, useCache, id);
     for (let i = 0; i < data.length; i++) {
         if (data[i][0] === id) {
@@ -210,7 +281,7 @@ updateCache: (sheetName, range, useCache = false, identifier = '') => {
  * @returns {GoogleAppsScript.Spreadsheet.Sheet} sheet 
  */
 getSheetByName(sheet_name){
-    return MasterSpreadsheet.getSheetByName(sheet_name)
+    return SpreadsheetUtils.MasterSpreadsheet.getSheetByName(sheet_name)
     
 
 },
@@ -233,7 +304,7 @@ getCellValueByCellPosition: (cellPosition, sheetName, useCache = false) => {
       }
     }
     
-    const sheet = MasterSpreadsheet.getSheetByName(sheetName);
+    const sheet = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(sheetName);
     const value = sheet.getRange(cellPosition).getValue();
     
     if (useCache) {
@@ -267,6 +338,49 @@ appendRowDataToExternalSpreadsheet(spreadsheet_url, sheet_name, arrData){
     }
     return sheet.appendRow(arrData).getLastRow()
 
+},
+/** 
+* Mencari entri dalam spreadsheet eksternal berdasarkan kriteria tertentu.
+* @param {Object} criteria - Kriteria pencarian.
+* @param {string} spreadsheetUrl - URL spreadsheet eksternal
+* @param {string} sheetName - Nama sheet tempat entri disimpan.
+* @param {string} range - Lokasi range data entri.
+* @param {boolean} [useCache=false] - Apakah boleh menggunakan cache
+* @returns {Array} - Array entri yang sesuai dengan kriteria.
+*/
+searchEntriesInExternalSpreadsheet (criteria,spreadsheetUrl, sheetName, range, useCache = false ) {
+ const externalSpreadsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
+ if (externalSpreadsheet == null) {
+   throw new Error("Maaf, tidak dapat mengakses spreadsheet eksternal. Pastikan URL spreadsheet benar dan Anda memiliki akses ke spreadsheet tersebut.");
+ }
+
+ const sheet = externalSpreadsheet.getSheetByName(sheetName);
+ if (sheet == null) {
+   throw new Error("Maaf, sheet dengan nama tersebut tidak ditemukan dalam spreadsheet eksternal.");
+ }
+
+ const data = sheet.getRange(range).getValues();
+ const headers = data[0]; // Mengambil header kolom sebagai referensi kunci
+ const results = [];
+
+ for (let i = 1; i < data.length; i++) {
+   let row = data[i];
+   let match = true;
+
+   for (let key in criteria) {
+     let columnIndex = headers.indexOf(key);
+     if (columnIndex !== -1 && row[columnIndex] !== criteria[key]) {
+       match = false;
+       break;
+     }
+   }
+
+   if (match) {
+     results.push(row);
+   }
+ }
+
+ return results;
 },
 checkEditorAccess(spreadsheet_url){
     const externalSpreadsheet = SpreadsheetApp.openByUrl(spreadsheet_url)
@@ -413,3 +527,5 @@ function coba(){
 const results = searchEntries({ Age: 8 }, 'Data', 'A:C');
 console.log(results);
 }
+
+Logger.log("Loaded SpreadsheetUtils.js" + (new Date() - startTime) + "ms")

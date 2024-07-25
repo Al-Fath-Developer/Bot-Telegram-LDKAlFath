@@ -1,6 +1,13 @@
-const suratKeluarRepository = new SuratKeluarRepository()
 
-class SuratKeluarServices{
+class SuratMenyuratServices{
+    constructor(){
+        this.suratMenyuratRepository = new SuratMenyuratRepository()
+        this.addSuratKeluar = this.addSuratKeluar.bind(this)
+        this.createBeritaAcara = this.createBeritaAcara.bind(this)
+        this.getBeritaAcaraRegexResult = this.getBeritaAcaraRegexResult.bind(this)
+        
+
+    }
     /**
      *  fungsi untuk menyimpan dokumentasi dan mendapatkan link hasil dokumentasi belajar
      * @param {number} id_telegram 
@@ -11,7 +18,7 @@ class SuratKeluarServices{
      */
     addSuratKeluar(id_telegram, username, url_file, caption){
         const arrCaption = TextUtils.pisahKodeNomorSurat(caption)
-        return suratKeluarRepository.saveSuratKeluar(id_telegram, username, url_file, arrCaption)
+        return this.suratMenyuratRepository.saveSuratKeluar(id_telegram, username, url_file, arrCaption)
 
     }
 
@@ -23,24 +30,20 @@ class SuratKeluarServices{
 
 
 
-        return suratKeluarRepository.createBeritaAcara(beritaAcara)
+        return this.suratMenyuratRepository.createBeritaAcara(beritaAcara)
     }
     /**
      * 
      * @param {String} raw 
      * @returns {BeritaAcara} - berita acara
      */
-    getBeritaAcaraRegexResult(raw){
+    getBeritaAcaraRegexResult(raw, template){
 
-        let match
-        const regex = TextUtils.regex_template 
-        const result = []
-
-        while ((match = regex.exec(raw)) !== null) {
         
-            result.push(match[1])
-    } 
-    
+        const result =         TextUtils.getRegexResult(raw, template)
+
+
+       
     const beritaAcara  = {}
     
     
@@ -72,3 +75,4 @@ beritaAcara.nama_sekretaris = result[14]
     }
 
 }
+Logger.log("Loaded SuratMenyuratServices.js" + (new Date() - startTime) + "ms")

@@ -39,6 +39,10 @@ const TextUtils = {
         const expectedFormat = this.getExpectedFormat(templateParts[i].slice(1, -1));
         if (!this.validateFormat(result[i], expectedFormat)) {
           throw new UserInputError(`Format jawaban ke-${i + 1} tidak sesuai. Diharapkan: ${expectedFormat}`);
+        }else{
+          if (expectedFormat == "nomor"){
+            result[i] = parseInt(result[i])
+          }
         }
       }
     }
@@ -154,3 +158,4 @@ function testTextUtils() {
       }
     
 }
+Logger.log("Loaded TextUtils.js" + (new Date() - startTime) + "ms");

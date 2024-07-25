@@ -7,3 +7,4 @@ node_modules/*
 deploy.sh
 0. env.js
 0. env.js
+.clasprc.json

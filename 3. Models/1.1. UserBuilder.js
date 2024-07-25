@@ -140,3 +140,4 @@ class UserBuilder {
         )
     }
 }
+Logger.log("Loaded UserBuilder.js" + (new Date() - startTime) + "ms")

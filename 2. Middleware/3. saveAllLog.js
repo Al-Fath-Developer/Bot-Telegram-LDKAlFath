@@ -7,6 +7,7 @@
  * @param {string} value 
  * @returns string
  */
+
 function sanitizeForCSV(value) {
     
     if (typeof value === 'string' && /^[=+\-@]/.test(value)) {
@@ -38,6 +39,8 @@ function extractUserInfo(ctx) {
  */
 function logTextMessage(userInfo, text, drive_id) {
   try {
+    const sheet_text_log = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(getMapENV('LOG_TEXT_SHEET_NAME'))
+
     text = sanitizeForCSV(text)
 
     const { user_id, username, fullname } = userInfo;
@@ -57,6 +60,8 @@ function logTextMessage(userInfo, text, drive_id) {
  */
 function logFileMessage(userInfo, fileType, fileInfo) {
   try {
+    const sheet_file_log = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(getMapENV('LOG_FILE_SHEET_NAME'))
+
     fileInfo.name = sanitizeForCSV(fileInfo.name)
 
     const { user_id, username, fullname } = userInfo;
@@ -71,6 +76,8 @@ function logFileMessage(userInfo, fileType, fileInfo) {
 
 // Event handlers
 bot.on("text", ctx => {
+  
+
   const userInfo = extractUserInfo(ctx);
   logTextMessage(userInfo, ctx.message.text);
 });
@@ -81,17 +88,37 @@ bot.on("caption", ctx => {
     logTextMessage(userInfo, ctx.message.caption, ctx.drive_id);
   }
 });
+bot.on("location", ctx => {
+  const sheet_location_log = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(getMapENV('LOG_LOCATION_SHEET_NAME'))
 
-["photo", "document", "audio", "video"].forEach(fileType => {
+  const userInfo = extractUserInfo(ctx);
+  const longitude = ctx.message.location.longitude;
+  const latitude = ctx.message.location.latitude;
+  const logData = [new Date(), userInfo.user_id, userInfo.username, userInfo.fullname,  latitude, longitude];
+  sheet_location_log.appendRow(logData);
+});
+
+["photo", "document", "audio", "video", "video_note", "voice"].forEach(fileType => {
   bot.on(fileType, ctx => {
     const userInfo = extractUserInfo(ctx);
     const file = DriveApp.getFileById(ctx.drive_id);
-    const fileInfo = {
-      url: file.getUrl(),
-      name: file.getName(),
-      size: file.getSize(),
-      type: file.getMimeType()
-    };
-    logFileMessage(userInfo, fileType, fileInfo);
-  });
+    try {
+      file.addEditor(ctx.currentUser?.email)
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW)
+      
+    } catch (error) {
+      ctx.reply(error.message)
+    }finally{
+
+      const fileInfo = {
+        url: file.getUrl(),
+        name: file.getName(),
+        size: file.getSize(),
+        type: file.getMimeType()
+      };
+      ctx.fileInfo = fileInfo;
+      logFileMessage(userInfo, fileType, fileInfo);
+    }
+    });
 });
+Logger.log("Loaded: saveAllLog.js" + (new Date() - startTime) + "ms")

@@ -1,8 +1,15 @@
-class SuratKeluarRepository  {
+class SuratMenyuratRepository  {
     constructor (){
-        this.post_berita_acara = getENV('SURAT_KELUAR_CREATE_BERITA_ACARA_API')
-        this.folder_id =getENV('SURAT_KELUAR_FOLDER_ID')
-        this.sheet_name_surat_keluar = getENV('SURAT_KELUAR_SHEET_NAME')
+        this.post_berita_acara = getMapENV('CREATE_BERITA_ACARA_API')
+        
+        this.surat_keluar_folder_id =getMapENV('SURAT_KELUAR_FOLDER_ID')
+        this.surat_masuk_folder_id =getMapENV('SURAT_MASUK_FOLDER_ID')
+
+        this.spreadsheet_link = getMapENV('SURAT_MENYURAT_SPREADSHEET_LINK')
+        this.sheet_name_surat_keluar = getMapENV('SURAT_KELUAR_SHEET_NAME')
+        this.sheet_name_surat_masuk = getMapENV('SURAT_MASUK_SHEET_NAME')
+        this.sheet_name_berita_acara = getMapENV('BERITA_ACARA_SHEET_NAME')
+        
     }
     /**
      * fungsi untuk menyimpan dokumentasi belajaer
@@ -15,9 +22,13 @@ class SuratKeluarRepository  {
     saveSuratKeluar  (id_telegram,username,url_file, caption){
                     let judul = caption.join("")
                     let drive_id = FileUtils.saveFileToDrive(url_file, username, judul);
-                    let drive_url =  DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(this.folder_id)).getUrl()
+                    let drive_url =  DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(this.surat_keluar_folder_id)).getUrl()
+        // return 
+        SpreadsheetUtils.appendRowDataToExternalSpreadsheet(
+            this.spreadsheet_link, this.sheet_name_surat_keluar, 
+            [new Date, id_telegram,username, ...caption , drive_url])
                     
-                    SpreadsheetUtils.createEntry([new Date, id_telegram,username, ...caption , drive_url],this.sheet_name_surat_keluar)
+                    // SpreadsheetUtils.createEntry([new Date, id_telegram,username, ...caption , drive_url],this.sheet_name_surat_keluar)
                     return drive_url    
                    
                 }
@@ -56,9 +67,13 @@ createBeritaAcara(data) {
             // Convert the JavaScript object to a JSON string.
             'payload' : JSON.stringify(data)
         };
-        
+        SpreadsheetUtils.appendRowDataToExternalSpreadsheet(
+            this.spreadsheet_link, this.sheet_name_berita_acara, 
+            [new Date, data.id_telegram, data.nama_kegiatan])
+                
         const hasil =   UrlFetchApp.fetch(this.post_berita_acara, options);
         Logger.log(JSON.stringify(hasil))
+
         return hasil
         
    
@@ -70,3 +85,4 @@ createBeritaAcara(data) {
 
     
 }
+Logger.log("Loaded SuratMenyuratRepository.js" + (new Date() - startTime) + "ms")

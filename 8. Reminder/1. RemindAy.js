@@ -1,13 +1,22 @@
 
+/**
+ * Function to remind the user not to submit AY.
+ */
 function remindUserNotSubmitAY() {
-    AYControllers.remindUserNotSubmitAY()
+    ayControllers.remindUserNotSubmitAY()
 }
 
+/**
+ * Function to remind the user not to submit Ngaji today.
+ */
 function remindUserNotNgajiToday() {
-   AYControllers.remindUserNotSubmitNgaji()
+   ayControllers.remindUserNotSubmitNgaji()
 }
 
-
+/**
+ * Function to reset the reminder status.
+ */
 function resetReminderStatus(){
-   Logger.log( AYControllers.resetStatus())
+   Logger.log( ayControllers.resetStatus())
 }
+Logger.log("Loaded RemindAy.js" + (new Date() - startTime) + "ms")

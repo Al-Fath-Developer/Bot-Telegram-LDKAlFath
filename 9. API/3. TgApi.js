@@ -12,3 +12,4 @@ class TgApi{
         return result
     }
 }
+Logger.log("Loaded TgApi.js" + (new Date() - startTime) + "ms")

@@ -1,18 +1,14 @@
-const suratKeluarServices = new SuratKeluarServices()
 
 /**
  * Kelas untuk menangani kontrol dokumentasi belajar
- */
-class SuratKeluarControllers  {
-   /**
-     * Membuat scene untuk menambahkan dokumentasi belajar
-     * @returns {Scene} Scene Telegraf untuk menambahkan dokumentasi belajar
-     */
-    createBeritaAcara(){
-        return new Scene('buat_berita_acara',
+*/
+class SuratMenyuratControllers  {
+    constructor(){
 
-        (ctx)=>{
-            const pesan_bot = ctx.reply(
+        this.suratMenyuratServices = new SuratMenyuratServices()
+        this.addSuratKeluar = this.addSuratKeluar.bind(this)
+        this.createBeritaAcara = this.createBeritaAcara.bind(this)
+        this.template_berita_acara = 
 `
 📝📝Pembuatan Berita Acara
 
@@ -42,6 +38,18 @@ Nama Sekretaris: [fulan2]
 - Rangkaian kegiatan bisa diisi dengan link dokumentasi
 - tulis "batal" (tanpa tanda petik) pada kolom chat jika ingin membatalkan proses
 `
+    }
+
+   /**
+     * Membuat scene untuk menambahkan dokumentasi belajar
+     * @returns {Scene} Scene Telegraf untuk menambahkan dokumentasi belajar
+     */
+    createBeritaAcara(){
+        return new Scene('buat_berita_acara',
+
+        (ctx)=>{
+            const pesan_bot = ctx.reply(
+this.template_berita_acara
             )
             return ctx.wizard.next();
 
@@ -58,9 +66,9 @@ Nama Sekretaris: [fulan2]
                 }
                 
                 ctx.reply("Terima Kasih telah mengisi berita acara. tunggu yaa... ")
-                const beritaAcara = suratKeluarServices.getBeritaAcaraRegexResult(ctx.message.text);
+                const beritaAcara = this.suratMenyuratServices.getBeritaAcaraRegexResult(ctx.message.text, this.template_berita_acara);
                 beritaAcara.id_telegram = ctx.from.id
-                suratKeluarServices.createBeritaAcara(beritaAcara)
+                this.suratMenyuratServices.createBeritaAcara(beritaAcara)
                 ctx.reply("Jika proses berhasil, silahkan buka email yang kamu masukan tadi lalu cek berita acara untuk memperbaiki isi dokumen ")
                 
                 return ctx.wizard.leave();
@@ -120,7 +128,7 @@ Contoh kode nomor surat: SRT-001/PRADA/ALFATH-UNITEL/V/2024
                     const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, id_photo);
                     const caption = ctx.message.caption || "";                    
                     
-                    const drive_url = suratKeluarServices.addSuratKeluar(ctx.from.id,ctx.from.username,url_file, caption)
+                    const drive_url = this.suratMenyuratServices.addSuratKeluar(ctx.from.id,ctx.from.username,url_file, caption)
                 ctx.reply("Terima kasih sudah mengisi, foto nya bisa diakses disini\n" , {
                     reply_markup: markup.inlineKeyboard([[button.url(caption, drive_url)]])
 
@@ -131,7 +139,7 @@ Contoh kode nomor surat: SRT-001/PRADA/ALFATH-UNITEL/V/2024
                 const id_document = ctx.update.message.document.file_id;
                 const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, id_document);
                 const filename = ctx.update.message.document.file_name;
-                const drive_url = suratKeluarServices.addSuratKeluar(ctx.from.id,ctx.from.username,url_file, filename)
+                const drive_url = this.suratMenyuratServices.addSuratKeluar(ctx.from.id,ctx.from.username,url_file, filename)
                 ctx.reply("Terima kasih sudah mengisi, dokumen nya bisa diakses disini\n" , {
                     reply_markup: markup.inlineKeyboard([[button.url(filename, drive_url)]])
 
@@ -158,3 +166,4 @@ Contoh kode nomor surat: SRT-001/PRADA/ALFATH-UNITEL/V/2024
 
     }
 }
+Logger.log("Loaded SuratMenyuratControllers.js" + (new Date() - startTime) + "ms")

@@ -1,6 +1,10 @@
-const inventarisServices = new InventarisServices()
 
 class InventarisControllers{
+    constructor(){
+ this.inventarisServices = new InventarisServices()
+        this.addKonfirmasiSekre = this.addKonfirmasiSekre.bind(this)
+    }
+
     /**
      * Melakukan konfirmasi terkait inventaris dari sekretariat di Al-Fath
      * @returns 
@@ -58,7 +62,7 @@ Silahkan konfirmasi berupa dokumentasi inventaris dengan ketentuan sebagai berik
                     const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, id_photo);
                     const caption = ctx.message.caption || "";                    
                     
-                    const drive_url = inventarisServices.addKonfirmasiSekre(ctx.from.id,ctx.from.username,url_file, caption)
+                    const drive_url = this.inventarisServices.addKonfirmasiSekre(ctx.from.id,ctx.from.username,url_file, caption)
 
                 ctx.reply("Terima kasih sudah konfirmasi, lah kok ilang? tenang, foto nya bisa diakses disini\n" , {
                     reply_markup: markup.inlineKeyboard([[button.url(caption, drive_url)]])
@@ -70,7 +74,7 @@ Silahkan konfirmasi berupa dokumentasi inventaris dengan ketentuan sebagai berik
                 const id_document = ctx.update.message.document.file_id;
                 const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, id_document);
                 const filename = ctx.update.message.document.file_name;
-                const drive_url = inventarisServices.addKonfirmasiSekre(ctx.from.id,ctx.from.username,url_file, filename)
+                const drive_url = this.inventarisServices.addKonfirmasiSekre(ctx.from.id,ctx.from.username,url_file, filename)
                 ctx.reply("Terima kasih sudah konfirmasi, lah kok ilang? tenang, dokumen nya bisa diakses disini\n" , {
                     reply_markup: markup.inlineKeyboard([[button.url(filename, drive_url)]])
 
@@ -101,3 +105,4 @@ Silahkan konfirmasi berupa dokumentasi inventaris dengan ketentuan sebagai berik
 
     }
 }
+Logger.log("Loaded InventarisControllers.js" + (new Date() - startTime) + "ms")

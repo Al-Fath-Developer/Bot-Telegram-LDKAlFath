@@ -11,7 +11,7 @@ function APIRoutes(query, payload){
     switch (query) {
         case "sendMessage":
             return userApi.sendMessage(payload)
-        case "tgApi":
+        case "da":
             return tgApi.general(payload)
         
         
@@ -21,3 +21,29 @@ function APIRoutes(query, payload){
     }
 
 }
+// {
+//     "method": "sendMessage",
+//     "data": {
+//         "chat_id": chat id bebas,
+//         "text": "hlo",
+//         "reply_markup": {
+//             "keyboard":  [[ {
+//                 "text": "Minta Lokasi",
+//                 "request_location": true
+//                 },{
+//                 "text": "Buka Link Lokasi",
+//                 "web_app": {
+//                     "url": "https://mylocation.org/"
+//                 }
+//                 }
+//                 ]
+                
+//                 ],
+//                   "one_time_keyboard": true
+
+
+//         }
+//     }
+// }'
+
+Logger.log("Loaded APIRoutes.js" + (new Date() - startTime) + "ms")

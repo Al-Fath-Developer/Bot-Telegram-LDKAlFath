@@ -1,6 +1,6 @@
 class InfoRepository{
     constructor (){
-        this.sheet_name = getENV('INFO_SHEET_NAME')
+        this.sheet_name = getMapENV('INFO_SHEET_NAME')
     }
 
     /**
@@ -12,3 +12,4 @@ class InfoRepository{
         return SpreadsheetUtils.getCellValueByCellPosition(cellPosition, this.sheet_name,true)
     }
 }
+Logger.log("Loaded InfoRepository" + (new Date() - startTime) + "ms")

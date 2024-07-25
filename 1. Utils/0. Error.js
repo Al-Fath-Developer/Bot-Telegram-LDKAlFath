@@ -15,11 +15,14 @@ class UserInputError extends Error{
  */
 function errorLog(e) {
     try {
+      const sheet_error_log = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(getMapENV('LOG_ERROR_SHEET_NAME'))
+
       sheet_error_log.appendRow([
         new Date(), 
         e.name,
         e.message,
-        e.stack
+        e.stack,
+        Logger.getLog()
       ]);
     } catch (logError) {
       console.error('Gagal mencatat error ke log:', logError);
@@ -27,3 +30,4 @@ function errorLog(e) {
     }
   }
   
+  Logger.log("Error.js berhasil dimuat" + (new Date() - startTime) + "ms");

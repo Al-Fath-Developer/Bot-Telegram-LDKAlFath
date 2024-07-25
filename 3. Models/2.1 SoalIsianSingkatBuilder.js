@@ -10,6 +10,7 @@ class SoalIsianSingkatBuilder {
       this.template_pertanyaan = '';
       this.spreadsheet_hasil_link = '';
       this.sheet_hasil_name = '';
+      this.bukti_lokasi = false;
     }
   
     /**
@@ -50,6 +51,11 @@ class SoalIsianSingkatBuilder {
     setSheetHasilName(sheet_hasil_name) {
       this.sheet_hasil_name = sheet_hasil_name;
       return this;
+  
+    }
+    setBuktiLokasi(bukti_lokasi){
+        this.bukti_lokasi = bukti_lokasi
+        return this
     }
   
     /**
@@ -60,3 +66,4 @@ class SoalIsianSingkatBuilder {
       return new SoalIsianSingkat(this);
     }
   }
+  Logger.log("Loaded SoalIsianSingkatBuilder.js" + (new Date() - startTime) + "ms")

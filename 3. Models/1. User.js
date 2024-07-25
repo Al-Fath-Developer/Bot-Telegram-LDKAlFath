@@ -52,3 +52,4 @@ class User {
         
 
 }
+Logger.log("Loaded User.js" + (new Date() - startTime) + "ms")

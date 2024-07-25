@@ -19,3 +19,4 @@ bot.cmd("updatemyinfo", (ctx)=>{
 bot.cmd("register", (ctx) => {
     return stage.enter("register");
 });
+Logger.log("Loaded UserRoutes.js" + (new Date() - startTime) + "ms")

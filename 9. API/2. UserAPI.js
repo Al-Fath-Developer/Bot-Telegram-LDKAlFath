@@ -16,3 +16,4 @@ class UserAPI{
     }
 
 }
+Logger.log("Loaded UserAPI.js" + (new Date() - startTime) + "ms")

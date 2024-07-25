@@ -9,14 +9,22 @@ class SoalIsianSingkat {
      * @param {string} params.template_pertanyaan - Template pertanyaan.
      * @param {string} params.spreadsheet_hasil_link - Link spreadsheet hasil.
      * @param {string} params.sheet_hasil_name - Nama sheet hasil.
+     * @param {boolean} params.bukti_lokasi - Bukti lokasi.
      */
-    constructor({ id_soal, template_pertanyaan, spreadsheet_hasil_link, sheet_hasil_name }) {
+    constructor({ id_soal, template_pertanyaan, spreadsheet_hasil_link, sheet_hasil_name, bukti_lokasi }) {
       this._id_soal = id_soal;
       this._template_pertanyaan = template_pertanyaan;
       this._spreadsheet_hasil_link = spreadsheet_hasil_link;
       this._sheet_hasil_name = sheet_hasil_name;
+      this._bukti_lokasi = bukti_lokasi;
     }
-  
+    get bukti_lokasi() {
+      return this._bukti_lokasi;
+    }
+    set bukti_lokasi(value) {
+      this._bukti_lokasi = value;
+    }
+
     /**
      * Mendapatkan ID soal.
      * @returns {string} ID soal.
@@ -81,3 +89,4 @@ class SoalIsianSingkat {
       this._sheet_hasil_name = value;
     }
   }
+  Logger.log("Loaded SoalIsianSingkat.js" + (new Date() - startTime) + "ms")

@@ -78,12 +78,6 @@ Departemen/Bidang: [Syiar]
 Wilayah (Pusat/Fakultas): [Fakultas]
 Amanah: [Kepala Bidang]
 
-*note
-- email harus valid karena akan digunaakn untuk verifikasi akun
-- jenis kelamin isikan dengan isian [Laki-laki] atau [Perempuan]
-- gunakan format seperti pada contoh diatas
-
-
 `    
     ,
     
@@ -172,6 +166,51 @@ user.amanah
 
 
 
+    },
+
+     /**
+     * Metode untuk mengirim email verifikasi dengan token.
+     * @param {string} email - Alamat email.
+     * @param {string} token - Token verifikasi.
+     */
+      sendEmail(email, token) {
+        try {
+            // Menggunakan HTML dengan CSS untuk pesan email yang lebih menarik
+            const subject = "Verifikasi Akun Anda";
+            const body = `Terima kasih telah mendaftar. Berikut adalah token verifikasi akun Anda: <strong>${token}</strong>`;
+            const htmlBody = `
+                        <html>
+                        <head>
+                        <style>
+                        body {
+                                background-color: #333;
+                                color: #fff;
+                                font-family: Arial, sans-serif;
+                                padding: 20px;
+                        }
+                        p {
+                                margin-bottom: 10px;
+                        }
+                        strong {
+                                color: #f0f;
+                        }
+                        </style>
+                        </head>
+                        <body>
+                                     <p>Halo,</p>
+                                     <p>${body}</p>
+                                     <p>Terima Kasih,</p>
+                                     <p>Tim Kami</p>
+                                     </body>
+                                     </html>
+                                     `;
+
+            // Mengirim email dengan pesan yang diperbarui
+            GmailApp.sendEmail(email, subject, body, { htmlBody: htmlBody });
+        } catch (error) {
+            // Handle error
+        }
     }
 
 }
+Logger.log("Loaded UserUtils.js" + (new Date() - startTime) + "ms");

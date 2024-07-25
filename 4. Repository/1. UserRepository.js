@@ -4,7 +4,13 @@
  */
 class UserRepository{
     constructor(){
-        this.sheet_name =  getENV('USER_SHEET_NAME')
+        this.sheet_name =  getMapENV('USER_SHEET_NAME')
+        this.createNewUser = this.createNewUser.bind(this)
+        this.updateUser = this.updateUser.bind(this)
+        this.isExist = this.isExist.bind(this)
+        this.findById = this.findById.bind(this)
+        this.getRawUserByNIM = this.getRawUserByNIM.bind(this)
+        
     }
 
     
@@ -110,6 +116,30 @@ class UserRepository{
         }
         return null
     }
+    getRawUserByNIM(nim){
+        try {
+            
+            let data = SpreadsheetUtils.readEntryById(nim, "Raw Users","A:I",true)
+            const user = new UserBuilder()
+            .setNim(data[0])
+            .setNamaLengkap(data[1])
+            .setJenisKelamin(data[2])
+            .setAngkatan(data[3])
+            .setFakultas(data[4])
+            .setDepartemen(data[5])
+            .setWilayah(data[6])
+            .setAmanah(data[7])
+            .setEmail(data[8])
+            .build()
+            return user
+        } catch (error) {
+            return error.message
+            
+        }
+
+        
+        
+    }
    
  
     
@@ -117,3 +147,4 @@ class UserRepository{
 
 
 }
+Logger.log("Loaded UserRepository.js" + (new Date() - startTime) + "ms")

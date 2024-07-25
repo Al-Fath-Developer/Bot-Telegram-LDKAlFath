@@ -1,6 +1,10 @@
-const inventarisRepository = new InventarisRepository()
 
 class InventarisServices{
+    constructor(){
+        this.inventarisRepository = new InventarisRepository()
+        this.addKonfirmasiSekre = this.addKonfirmasiSekre.bind(this)
+
+    }
      /**
      *  fungsi untuk menyimpan dokumentasi dan mendapatkan link hasil dokumentasi belajar
      * @param {number} id_telegram 
@@ -11,8 +15,9 @@ class InventarisServices{
      */
      addKonfirmasiSekre(id_telegram, username, url_file, caption){
         const arrCaption = TextUtils.pisahKataPertama(caption)
-        return inventarisRepository.addKonfirmasiSekre(id_telegram, username, url_file, arrCaption)
+        return this.inventarisRepository.addKonfirmasiSekre(id_telegram, username, url_file, arrCaption)
 
     }
 
 }
+Logger.log("Loaded InventarisServices" + (new Date() - startTime) + "ms")
