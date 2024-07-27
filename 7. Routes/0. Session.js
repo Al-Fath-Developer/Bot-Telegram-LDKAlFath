@@ -2,6 +2,7 @@ const userControllers = new UserControllers();
   const suratMenyuratCOntrollers = new SuratMenyuratControllers();
   const inventarisControllers = new InventarisControllers();
   const soalIsianSingkatControllers = new SoalIsianSingkatControllers();
+  const presensiControllers = new PresensiControllers();
 
   const stage = new Stage([
       
@@ -11,7 +12,8 @@ const userControllers = new UserControllers();
       suratMenyuratCOntrollers.createBeritaAcara(),
       inventarisControllers.addKonfirmasiSekre(),
       soalIsianSingkatControllers.jawabSoal(),
-      soalIsianSingkatControllers.jawabSoalGuest()
+      soalIsianSingkatControllers.jawabSoalGuest(),
+      presensiControllers.addAdminPresensi(),
   ]);
 
   bot.use(stage.middleware());

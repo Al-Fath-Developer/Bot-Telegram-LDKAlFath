@@ -39,8 +39,10 @@ const SpreadsheetUtils = {
     */
     createEntry: (data, sheetName) =>{
         data = SpreadsheetUtils.bulkSanitize(data)
-       const sheet = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(sheetName);
-           
+      let sheet = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(sheetName);
+      if (sheet == null){
+          sheet = SpreadsheetUtils.MasterSpreadsheet.insertSheet(sheetName) 
+      }
        const lr = sheet.appendRow([...data]).getLastRow();
        SpreadsheetUtils.index[data[0]] = data;
        return lr
@@ -332,9 +334,9 @@ appendRowDataToExternalSpreadsheet(spreadsheet_url, sheet_name, arrData){
 
     }
     
-    const sheet = externalSpreadsheet.getSheetByName(sheet_name)
+    let  sheet = externalSpreadsheet.getSheetByName(sheet_name)
     if (sheet == null){
-        throw new Error("Maaf, nama sheet yang dituju salah. Hubungi Admin untuk memperbaikinya")
+        sheet = externalSpreadsheet.insertSheet(sheet_name)
     }
     return sheet.appendRow(arrData).getLastRow()
 
