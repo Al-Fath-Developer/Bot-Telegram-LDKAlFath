@@ -11,7 +11,7 @@ function APIRoutes(query, payload){
     switch (query) {
         case "sendMessage":
             return userApi.sendMessage(payload)
-        case "da":
+        case "tgApi":
             return tgApi.general(payload)
         
         
