@@ -384,11 +384,7 @@ searchEntriesInExternalSpreadsheet (criteria,spreadsheetUrl, sheetName, range, u
 
  return results;
 },
-checkEditorAccess(spreadsheet_url){
-    const externalSpreadsheet = SpreadsheetApp.openByUrl(spreadsheet_url)
 
-
-},
 
 /**
  * Durasi cache dalam detik (default: 1 jam)

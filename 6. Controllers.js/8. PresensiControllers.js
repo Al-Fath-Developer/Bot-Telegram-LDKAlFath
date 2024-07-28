@@ -1,110 +1,84 @@
-class PresensiControllers{
-    constructor(){
-        this.presensiServices = new PresensiServices()
-        this.addAdminPresensi = this.addAdminPresensi.bind(this)
+class PresensiControllers {
+    constructor() {
+        this.presensiServices = new PresensiServices();
+        this.addAdminPresensi = this.addAdminPresensi.bind(this);
+        this.tambahAdminPresensiScene = this.tambahAdminPresensiScene.bind(this);
+        this.processJawabanScene = this.processJawabanScene.bind(this);
+        this.finalScene = this.finalScene.bind(this);
+        this.chatTexts = {
+            tambahAdminPresensi: "Silahkan foto sekitar kamu yang menggambarkan posisi kamu sedang menjadi Admin Presensi dengan caption nama kepanitiaan",
+            error: "Maaf, ada kesalahan: ",
+            fileRequired: "Maaf, kamu harus mengirimkan file untuk melanjutkan. Silahkan ulangi dari awal",
+            thanks: "Terima Kasih. Jawaban kamu tersimpan pada baris ke-",
+            scanQR: "Berikut merupakan web untuk melakukan scan qr presensi",
+            loading: "Tunggu sebentar..."
+        };
     }
-    addAdminPresensi(){
-        /**
-            * @param {Object} ctx - Konteks Telegram
-            * @returns {Promise} Promise yang menyelesaikan ke langkah wizard berikutnya atau meninggalkan wizard
-            * @description Langkah pertama: Menampilkan soal dan mempersiapkan data
-            */
-       return new Scene('tambah_admin_presensi', (ctx)=>{
-           try {
 
-           
-                ctx.reply("Silahkan kirim lokasi saat ini. bisa berupa lokasi, screenshot lokasi dari web atau foto sekitar kamu yang menggambarkan posisi saat ini", {
-                    reply_markup: {
-                        keyboard: [
-                            [
-                                {
-                                    text: "Kirim Lokasi",
-                                    request_location: true,
-                                },
-                                {
-                                    text: "Screenshot hasil dari web ini",
-                                    web_app: {
-                                        url: "https://mylocation.org/",
-                                    },
-                                },
-                            ],
-                        ],
-                        one_time_keyboard: true,
-                    },
-                });
-            return ctx.wizard.next()
-            
-
-            
-           } catch (error) {
-
-               ctx.reply("Maaf, ada kesalahan: " + error.message)    
-               return ctx.wizard.leave()
-           }
-
-
-       },
-       /**
-            * @param {Object} ctx - Konteks Telegram
-            * @returns {Promise} Promise yang menyelesaikan dengan meninggalkan wizard
-            * @description Langkah kedua: Memproses jawaban pengguna dan menyimpannya
-            */
-       (ctx)=>{
+    tambahAdminPresensiScene(ctx) {
         try {
-            const loading = ctx.reply("Tunggu sebentar...")
-            UserUtils.registerRequired(ctx)
+            ctx.reply(this.chatTexts.tambahAdminPresensi);
+            return ctx.wizard.next();
+        } catch (error) {
+            ctx.reply(this.chatTexts.error + error.message);
+            return ctx.wizard.leave();
+        }
+    }
+
+    processJawabanScene(ctx) {
+        try {
+            const loading = ctx.reply(this.chatTexts.loading);
+            UserUtils.registerRequired(ctx);
             const arrJawaban = Object.values(ctx.currentUser);
-            
 
-
-            if (ctx.message.location) {
-                const latitude = ctx.message.location.latitude;
-                const longitude = ctx.message.location.longitude;
-                arrJawaban.push(JSON.stringify({ latitude, longitude }));
-                // Process the latitude and longitude data
-                // Send the data to the desired sheet
-            } else if (ctx.message.photo) {
-                const link_drive = FileUtils.getDriveURLFromCtx(ctx,"1CD15ZWGkZB4-G0r42KqiRMmbH9bX2_71",ctx.data.id_soal +  ctx.currentUser.nama_lengkap);
+            if (ctx.message.text === undefined) {
+                const link_drive = FileUtils.getDriveURLFromCtx(
+                    ctx,
+                    getMapENV("PRESENSI_BUKTILOKASI_ADMIN_DRIVE_ID"),
+                    ctx.message.caption + ctx.currentUser.nama_lengkap,
+                    ctx.currentUser.email
+                );
                 arrJawaban.push(link_drive);
                 // Process the link data
                 // Send the data to the desired sheet
             } else {
-                ctx.reply("Format jawaban salah. Mohon kirimkan lokasi atau link Google Drive yang valid.");
+                ctx.reply(this.chatTexts.fileRequired);
                 return ctx.wizard.leave();
             }
-            const lastRow =  this.presensiServices.addAdminPresensi(arrJawaban)
-            
-            ctx.reply("Terima Kasih. Jawaban kamu tersimpan pada baris ke-" + lastRow)
-            ctx.replyWithHTML("Berikut merupakan qr presensinya", {
+            const lastRow = this.presensiServices.addAdminPresensi(arrJawaban);
+
+            ctx.replyWithHTML(this.chatTexts.thanks + lastRow);
+            ctx.replyWithHTML(this.chatTexts.scanQR, {
                 reply_markup: {
-                    "inline_keyboard": [
-                [
-                    {
-                        "text": "Tools Scan QR Presensi",
-                        "web_app": {
-                            "url": "https://alfathtelyudev.github.io/internal/1.%20Presensi%20Kader%20Al-Fath/"
-                        }
-                    }
-                ]
-            ]
+                    inline_keyboard: [
+                        [
+                            {
+                                text: "Tools Scan QR Presensi",
+                                web_app: {
+                                    url: getMapENV("PRESENSI_SCANQR_LINK"),
+                                },
+                            },
+                        ],
+                    ],
                 },
-            })
-            ctx.deleteMessage(loading.result.message_id)
+            });
+            ctx.deleteMessage(loading.result.message_id);
 
             return ctx.wizard.leave();
-
         } catch (error) {
-            ctx.reply("Error: " + error.message);
+            ctx.reply(this.chatTexts.error + error.message);
             return ctx.wizard.leave();
         }
+    }
 
-           
+    finalScene(ctx) {}
 
-       },(ctx)=>{
-
-               
-           }
-       
-       )       
-   }
+    addAdminPresensi() {
+        return new Scene(
+            'tambah_admin_presensi',
+            this.tambahAdminPresensiScene,
+            this.processJawabanScene,
+            this.finalScene
+        );
+    }
 }

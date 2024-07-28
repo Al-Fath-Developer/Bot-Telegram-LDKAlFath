@@ -10,6 +10,8 @@ class AYControllers {
         this.remindUserNotSubmitAY = this.remindUserNotSubmitAY.bind(this);
         this.remindUserNotSubmitNgaji = this.remindUserNotSubmitNgaji.bind(this);
         this.resetStatus = this.resetStatus.bind(this);
+        this.showPage = this.showPage.bind(this);
+        this.arrTombolGantiHalamanQuran = this.arrTombolGantiHalamanQuran.bind(this);
     }
 
     /**
@@ -172,27 +174,15 @@ Juz: ${dataAyat.juz}
             }
             return ctx.reply("Maaf, ayat atau surah yang Anda masukan tidak valid.");
         }
-        const basmalah = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
-        let count_ayat = 0;
-        let message = `<a href="https://quran.com/page/${dataAyat.page}">Halaman [${dataAyat.page}]</a>\n\n` + dataAyat.ayahs[0].surah + "\n========\n";
-        dataAyat.ayahs.forEach((e) => {
-            if (e.no_ayah == 1) {
-                message = message +
-                    `${count_ayat == 0 ? "" : e.surah + "\n========\n"}${basmalah}\n\n(${e.no_ayah})\n${e.ayah.replace(basmalah, "")}\n<a href="${e.audio}">${e.latin}</a>\n\n`;
-            } else {
-                message = message + `(${e.no_ayah})\n<b>${e.ayah}</b>\n<a href="${e.audio}">${e.latin}</a>\n\n`;
-            }
-            count_ayat++;
-        });
-        message = message + `\n\nBanyak ayat yang ditampilkan: ${count_ayat}\nJuz: ${dataAyat.juz}\nHalaman: ${dataAyat.page}\n\n Jazakallah Khairan Katsiran\n\n\nBot Telegram LDK Al-Fath`;
+      const message = this.showPage(dataAyat);
         if (ctx.update.callback_query) {
             ctx.editMessageText(message, {
                 parse_mode: "HTML",
-                reply_markup: markup.inlineKeyboard([[ button.text("Halaman Setelahnya", 'next_page_alquran'),button.text("Halaman Sebelumnya", 'prev_page_alquran')]])
+                reply_markup: markup.inlineKeyboard([this.arrTombolGantiHalamanQuran(dataAyat.page)])
             });
         } else {
             ctx.replyWithHTML(message, {
-                reply_markup: markup.inlineKeyboard([[ button.text("Halaman Setelahnya", 'next_page_alquran'),button.text("Halaman Sebelumnya", 'prev_page_alquran')]])
+                reply_markup: markup.inlineKeyboard([this.arrTombolGantiHalamanQuran(dataAyat.page)])
             });
         }
     }
@@ -206,31 +196,18 @@ Juz: ${dataAyat.juz}
             }
             return ctx.reply("Maaf, ayat atau surah yang Anda masukan tidak valid.");
         }
-        const basmalah = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
-        
-        let count_ayat = 0;
-        let message = `<a href="https://quran.com/page/${dataAyat.page}">Halaman [${dataAyat.page}]</a>\n\n` + dataAyat.ayahs[0].surah + "\n========\n";
-        dataAyat.ayahs.forEach((e) => {
-            if (e.no_ayah == 1) {
-                message = message +
-                    `${count_ayat == 0 ? "" : e.surah + "\n========\n"}${basmalah}\n\n(${e.no_ayah})\n${e.ayah.replace(basmalah, "")}\n<a href="${e.audio}">${e.latin}</a>\n\n`;
-            } else {
-                message = message + `(${e.no_ayah})\n<b>${e.ayah}</b>\n<a href="${e.audio}">${e.latin}</a>\n\n`;
-            }
-            count_ayat++;
-        });
-        message = message + `\n\nBanyak ayat yang ditampilkan: ${count_ayat}\nJuz: ${dataAyat.juz}\nHalaman: ${dataAyat.page}\n\n Jazakallah Khairan Katsiran\n\n\nBot Telegram LDK Al-Fath`;
+       const message  = this.showPage(dataAyat);
         if (ctx.update.callback_query) {
             ctx.editMessageText(message, {
                 parse_mode: "HTML",
-                reply_markup: markup.inlineKeyboard([[ button.text("Halaman Setelahnya", 'next_page_alquran'),button.text("Halaman Sebelumnya", 'prev_page_alquran')],
+                reply_markup: markup.inlineKeyboard([this.arrTombolGantiHalamanQuran(dataAyat.page),
                 [button.text("🔙 Main Menu", 'main_menu')]
             
             ])
             });
         } else {
             ctx.replyWithHTML(message, {
-                reply_markup: markup.inlineKeyboard([[ button.text("Halaman Setelahnya", 'next_page_alquran'),button.text("Halaman Sebelumnya", 'prev_page_alquran')]])
+                reply_markup: markup.inlineKeyboard([this.arrTombolGantiHalamanQuran(dataAyat.page)])
             });
         }
     }
@@ -248,6 +225,36 @@ Juz: ${dataAyat.juz}
         }
 
     }
+    showPage(dataAyat){
+        const basmalah = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+        
+        let count_ayat = 0;
+        let message = `<a href="https://quran.com/page/${dataAyat.page}">Halaman [${dataAyat.page}]</a>\n\n` + dataAyat.ayahs[0].surah + "\n========\n";
+        dataAyat.ayahs.forEach((e) => {
+            if (e.no_ayah == 1) {
+                message = message +
+                    `${count_ayat == 0 ? "" : e.surah + "\n========\n"}${basmalah}\n\n(${e.no_ayah})\n${e.ayah.replace(basmalah, "")}\n<a href="${e.audio}">${e.latin}</a>\n\n`;
+            } else {
+                message = message + `(${e.no_ayah})\n<b>${e.ayah}</b>\n<a href="${e.audio}">${e.latin}</a>\n\n`;
+            }
+            count_ayat++;
+        });
+        message = message + `\n\nBanyak ayat yang ditampilkan: ${count_ayat}\nJuz: ${dataAyat.juz}\nHalaman: ${dataAyat.page}\n\n Jazakallah Khairan Katsiran\n\n\nBot Telegram LDK Al-Fath`;
+        return message
+    }
+     arrTombolGantiHalamanQuran(halamansekarang) {
+        const arrKeyboard = []
+        if (halamansekarang != 604) {
+            arrKeyboard.push(button.text(`Next Page(${halamansekarang + 1})`, 'next_page_alquran'))
+        }
+        if (halamansekarang != 1) {
+            arrKeyboard.push(button.text(`Prev Page(${halamansekarang - 1})`, 'prev_page_alquran'))
+        }
+        
+        return arrKeyboard
+        
+    }
+
 }
 
 // class AYControllers {

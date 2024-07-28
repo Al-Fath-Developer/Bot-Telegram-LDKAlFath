@@ -3,6 +3,8 @@
  * @param {Object} ctx - Konteks dari perintah.
  */
 bot.hear(/#lihatSoal\s+([^\s]+)/g, (ctx) =>{
+    showTypingStatus(ctx)
+
     soalIsianSingkatControllers.showSoal(ctx)
 })
 
@@ -12,6 +14,8 @@ bot.hear(/#lihatSoal\s+([^\s]+)/g, (ctx) =>{
  * @returns {Object} - Objek stage untuk memasuki mode menjawab soal.
  */
 bot.hear(/#jawabsoal\s+([^\s]+)/g, (ctx) =>{
+    showTypingStatus(ctx)
+
     UserUtils.registerRequired(ctx)
     return stage.enter("jawab_soal");
 })
@@ -22,6 +26,8 @@ bot.hear(/#jawabsoal\s+([^\s]+)/g, (ctx) =>{
  * @returns {Object} - Objek stage untuk memasuki mode menjawab soal sebagai tamu.
  */
 bot.hear(/#jawabsoalguest\s+([^\s]+)/g, (ctx) =>{
+    showTypingStatus(ctx)
+
     return stage.enter("jawab_soal_guest");
 })
 Logger.log("Loaded SoalIsianSingkatRoutes.js" + (new Date() - startTime) + "ms")

@@ -88,21 +88,4 @@ const sheet_process_log = SpreadsheetUtils.MasterSpreadsheet.getSheetByName(getM
   }
 }
 
-// function temporaryLoadingMessage(ctx){
-//   const loading_message = ctx.reply("Tunggu sebentar...")
-//   ctx.deleteMessage(loading_message.result.message_id)
-
-
-
-// }
-//Keyboard
-// var keyboard = Keyboard.reply(['Laki-laki', 'Perempuan'])
-//         keyboard.reply_markup.one_time_keyboard= true
-
-// Logger.log(keyboard)
-//     ctx.reply("Jenis Kelamin: ", keyboard);
-
-
-// Jalankan: > (clasp push) -dan (clasp deploy --deploymentId AKfycbyG-foUc2w-h6dbSqU6lu5HMRjCaloK5_dvYaWQe5hQvoOzgIiabVCzGJ1s8mto9Ys)
-
 Logger.log("bot.js berhasil dimuat" + (new Date() - startTime) + "ms");

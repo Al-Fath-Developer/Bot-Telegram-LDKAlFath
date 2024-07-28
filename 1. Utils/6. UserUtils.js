@@ -36,13 +36,6 @@ const UserUtils = {
     const user = ctx.currentUser
    
     return user
-//         bot.use( (ctx, next) => {
-//     let currentUser = (new UserServices()).getUserInfoById(ctx.from.id)
-//     ctx.currentUser = currentUser
-
-//     // eksekusi next() untuk melanjutkan ke middleware berikutnya
-//     next();
-//   })
 
 },
 registerRequired(ctx){
@@ -175,39 +168,20 @@ user.amanah
      */
       sendEmail(email, token) {
         try {
-            // Menggunakan HTML dengan CSS untuk pesan email yang lebih menarik
-            const subject = "Verifikasi Akun Anda";
-            const body = `Terima kasih telah mendaftar. Berikut adalah token verifikasi akun Anda: <strong>${token}</strong>`;
-            const htmlBody = `
-                        <html>
-                        <head>
-                        <style>
-                        body {
-                                background-color: #333;
-                                color: #fff;
-                                font-family: Arial, sans-serif;
-                                padding: 20px;
-                        }
-                        p {
-                                margin-bottom: 10px;
-                        }
-                        strong {
-                                color: #f0f;
-                        }
-                        </style>
-                        </head>
-                        <body>
-                                     <p>Halo,</p>
-                                     <p>${body}</p>
-                                     <p>Terima Kasih,</p>
-                                     <p>Tim Kami</p>
-                                     </body>
-                                     </html>
-                                     `;
-
-            // Mengirim email dengan pesan yang diperbarui
-            GmailApp.sendEmail(email, subject, body, { htmlBody: htmlBody });
+                const urlsendbot = getMapENV('BOT_TELEGRAM_URL') +  "?text="
+                  var html = HtmlService.createTemplateFromFile('9. Verifikasi Email Template').getRawContent()
+                  html = html.replace("${token}", token)
+                  html = html.replace("${token}", token)
+                  html = html.replace("${urlsendbot}", urlsendbot)
+                  Logger.log(html)
+                  GmailApp.sendEmail(email, "Verifikasi Bot Telegram LDK Al-Fath", "Bismillah, berikut merupakan kode verifikasi akun di bot telegram: " + token ,{
+                    replyTo	: "alfath.sender@gmail.com",
+                    name: "Admin Bot Telegram LDK Al-Fath",
+                  htmlBody: html
+                
+                   })
         } catch (error) {
+                errorLog(error)
             // Handle error
         }
     }

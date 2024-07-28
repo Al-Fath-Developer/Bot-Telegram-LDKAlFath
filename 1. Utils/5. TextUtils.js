@@ -1,9 +1,3 @@
-// class UserInputError extends Error {
-//   constructor(message) {
-//     super(message);
-//     this.name = "UserInputError";
-//   }
-// }
 
 const TextUtils = {
   regex_template: /\[([^\]]*?)\]/g,

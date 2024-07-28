@@ -34,11 +34,13 @@ const FileUtils = {
      * @returns {string} ID file yang disimpan di Google Drive.
      */
  saveFileToDrive : (url_file, username, caption = "")=> {
+    
     let blob = UrlFetchApp.fetch(url_file).getBlob()
     let id = DriveApp.createFile(blob).setName(caption + "|" + username).moveTo(DriveApp.getFolderById(getMapENV('USER_FILES_FOLDER_ID'))).getId();
     return id;
 },
     getDriveURLFromCtx(ctx, folder_id, file_name, email = null) {
+        showBotStatus(ctx)
         if(ctx.message.document || ctx.message.photo || ctx.message.audio || ctx.message.video || ctx.message.voice || ctx.message.video_note || ctx.message.animation || ctx.message.sticker){
             let file_id;
             

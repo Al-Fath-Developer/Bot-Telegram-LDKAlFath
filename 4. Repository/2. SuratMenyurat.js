@@ -79,10 +79,7 @@ createBeritaAcara(data) {
    
                 }
 
-                getTemplateSuratKeluar(){
-
-                }
-
+          
     
 }
 Logger.log("Loaded SuratMenyuratRepository.js" + (new Date() - startTime) + "ms")

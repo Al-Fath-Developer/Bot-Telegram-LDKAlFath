@@ -6,30 +6,41 @@
 
 
 bot.on("photo", ctx => {
+    showBotStatus(ctx)
     const caption = ctx.message.caption || "";
     ctx.drive_id = FileUtils.saveFileToDrive(ctx.url_file, ctx.from.username, caption);
 })
 
 bot.on("video", ctx => {
+    showBotStatus(ctx)
+
     const caption = ctx.message.caption || "";
     ctx.drive_id = FileUtils.saveFileToDrive(ctx.url_file, ctx.from.username, caption);
 })
 bot.on("video_note", ctx => {
+    showBotStatus(ctx)
+
     const caption = ctx.message.caption || "Video Note";
     ctx.drive_id = FileUtils.saveFileToDrive(ctx.url_file, ctx.from.username, caption);
 })
 
 bot.on("voice", ctx => {
+    showBotStatus(ctx)
+
     const caption = ctx.message.caption || "Voice Note";
     ctx.drive_id = FileUtils.saveFileToDrive(ctx.url_file, ctx.from.username, caption);
 })
 
 bot.on("audio", ctx => {
+    showBotStatus(ctx)
+
     const caption = ctx.message.caption || "";
     ctx.drive_id = FileUtils.saveFileToDrive(ctx.url_file, ctx.from.username, caption);
 })
 
 bot.on("document", ctx => {
+    showBotStatus(ctx)
+
     const caption = ctx.message.caption || "";
 
     const filename = ctx.filename + "|" + caption;

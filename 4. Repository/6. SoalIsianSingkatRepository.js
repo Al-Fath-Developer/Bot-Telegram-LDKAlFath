@@ -11,7 +11,7 @@ class SoalIsianSingkatRepository{
      * @returns {SoalIsianSingkat}
      */
     getDataSoalLengkapById(id_soal){
-        const arrData = SpreadsheetUtils.readEntryByIdFromExternalSpreadsheet(id_soal,this.spreadsheet_link, this.sheet_name, this.sheet_range,true);
+        const arrData = SpreadsheetUtils.readEntryByIdFromExternalSpreadsheet(id_soal,this.spreadsheet_link, this.sheet_name, this.sheet_range,false);
         
         if (arrData != null){
 
