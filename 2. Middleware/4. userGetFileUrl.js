@@ -7,7 +7,7 @@
       ctx.deleteMessage()
       if (name && url){
        
-        ctx.replyWithHTML(`Upload File Selesai\n\nEits data nya ilang?. Tenang, data kamu kesimpen kok\nfile ini bisa diakses oleh email yang kamu masukan saat registrasi. Untuk melihat informasi email bisa lihat di /myinfo \n\n<a href="${url}">${name}</a>\n========\n${catatan}\n\nBot Telegram`, {
+        ctx.replyWithHTML(`Upload File Selesai\n\nEits data nya ilang?. Tenang, data kamu kesimpen kok\nfile ini bisa diakses oleh email yang kamu masukan saat registrasi. Untuk melihat informasi email bisa lihat di /myinfo \n\n<a href="${url}">${name}</a>\n========\n${catatan}\n\n${TextUtils.watermark}`, {
         });
         // reply_markup: markup.inlineKeyboard([[button.text("🔙Main Menu", "main_menu")]])
       }else{

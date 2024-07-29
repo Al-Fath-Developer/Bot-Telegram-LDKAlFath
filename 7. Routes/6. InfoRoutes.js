@@ -25,7 +25,7 @@ bot.cmd("infofitur", (ctx)=>{
  * @returns {Promise} - Promise yang mengembalikan daftar fitur.
  */
 bot.action("list_fitur", (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
     return infoControllers.getListFeature(ctx);
 })
@@ -37,7 +37,7 @@ bot.action("list_fitur", (ctx)=>{
  * @returns {Promise} - Promise yang mengembalikan informasi tentang pengembang.
  */
 bot.action('about_dev', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
     return infoControllers.getAboutDev(ctx)
 })
@@ -49,7 +49,7 @@ bot.action('about_dev', (ctx)=>{
  * @returns {Promise} - Promise yang mengembalikan visi dan misi.
  */
 bot.action('visi_misi', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
     return infoControllers.getVisiMisi(ctx)
 })
@@ -61,14 +61,14 @@ bot.action('visi_misi', (ctx)=>{
  * @returns {Promise} - Promise yang mengembalikan menu utama.
  */
 bot.action('main_menu', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
     UserUtils.registerOptional(ctx)
 
     return infoControllers.getMenuStart(ctx)
 })
 bot.action('about_bot', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
     return infoControllers.getAboutBot(ctx)
 })
@@ -80,13 +80,13 @@ bot.action('about_bot', (ctx)=>{
  * @returns {Promise} - Promise yang mengembalikan kritik dan saran.
  */
 bot.action('kritik_saran_bot', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
     return infoControllers.getKritikSaran(ctx)
 })
 
 bot.action('settingan_telegram', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
     return infoControllers.getSettinganTelegram(ctx)
 })
@@ -99,7 +99,7 @@ bot.action('settingan_telegram', (ctx)=>{
  * @returns {Promise} - Promise yang mengembalikan menu utama.
  */
 bot.start(ctx=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
     UserUtils.registerOptional(ctx)
     return infoControllers.getMenuStart(ctx)

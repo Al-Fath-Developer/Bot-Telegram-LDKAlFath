@@ -7,7 +7,7 @@ class SoalIsianSingkatServices{
         this.soalIsianSingkatRepo = new SoalIsianSingkatRepository()
         this.getDataSoalLengkapById = this.getDataSoalLengkapById.bind(this)
         this.addAnswerFromUser = this.addAnswerFromUser.bind(this)
-        this.addAnswerFromGuest = this.addAnswerFromGuest.bind(this)
+        this.addAnswerFromUserGuest = this.addAnswerFromUserGuest.bind(this)
 
     }
 
@@ -26,32 +26,38 @@ class SoalIsianSingkatServices{
   /**
      * Menambahkan jawaban dari pengguna ke spreadsheet
      * @param {string} id_telegram - ID Telegram pengguna
-     * @param {string} nim - Nomor Induk Mahasiswa
+     * @param {User} user - Nomor Induk Mahasiswa
      * @param {Array} arrAnswer - Array berisi jawaban pengguna
      * @param {string} spreadsheet_hasil_link - Link spreadsheet hasil
      * @param {string} sheet_hasil_name - Nama sheet hasil
      * @returns {number} Nomor baris terakhir yang ditambahkan
      */
-    addAnswerFromUser(id_telegram, nim, arrAnswer, spreadsheet_hasil_link, sheet_hasil_name){
-        const result = [new Date(), id_telegram, nim, ...arrAnswer]
+    addAnswerFromUser(id_telegram, user, arrAnswer, spreadsheet_hasil_link, sheet_hasil_name){
+      
+      const arrUser = Object.values(user)
+
+        const result = [new Date(), Utilities.base64Encode( id_telegram), ...arrUser, ...arrAnswer]
         const lastRow = this.soalIsianSingkatRepo.addAnswerFromUser(result,spreadsheet_hasil_link, sheet_hasil_name )
         return lastRow
         
     }
-      /**
+  /**
      * Menambahkan jawaban dari pengguna ke spreadsheet
      * @param {string} id_telegram - ID Telegram pengguna
-     * @param {string} username - Nomor Induk Mahasiswa
+     * @param {User} user - Nomor Induk Mahasiswa
      * @param {Array} arrAnswer - Array berisi jawaban pengguna
      * @param {string} spreadsheet_hasil_link - Link spreadsheet hasil
      * @param {string} sheet_hasil_name - Nama sheet hasil
      * @returns {number} Nomor baris terakhir yang ditambahkan
      */
-      addAnswerFromGuest(id_telegram, username, arrAnswer, spreadsheet_hasil_link, sheet_hasil_name){
-        const result = [new Date(), id_telegram, username, ...arrAnswer]
+    addAnswerFromUserGuest(id_telegram,  arrAnswer, spreadsheet_hasil_link, sheet_hasil_name){
+      
+
+        const result = [new Date(), Utilities.base64Encode( id_telegram), ...arrAnswer]
         const lastRow = this.soalIsianSingkatRepo.addAnswerFromUser(result,spreadsheet_hasil_link, sheet_hasil_name )
         return lastRow
         
     }
+      
 }
 Logger.log("Loaded SoalIsianSingkatServices" + (new Date() - startTime) + "ms")

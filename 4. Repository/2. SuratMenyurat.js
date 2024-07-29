@@ -19,11 +19,8 @@ class SuratMenyuratRepository  {
      * @param {Array} caption
      * @return {string} link drive
      */
-    saveSuratKeluar  (id_telegram,username,url_file, caption){
-                    let judul = caption.join("")
-                    let drive_id = FileUtils.saveFileToDrive(url_file, username, judul);
-                    let drive_url =  DriveApp.getFileById(drive_id).moveTo(DriveApp.getFolderById(this.surat_keluar_folder_id)).getUrl()
-        // return 
+    saveSuratKeluar  (id_telegram,username,drive_url, caption){
+                   
         SpreadsheetUtils.appendRowDataToExternalSpreadsheet(
             this.spreadsheet_link, this.sheet_name_surat_keluar, 
             [new Date, id_telegram,username, ...caption , drive_url])

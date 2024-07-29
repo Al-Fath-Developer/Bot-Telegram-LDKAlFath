@@ -86,14 +86,8 @@ class InfoControllers {
    */
   getMenuStart(ctx) {
 
-    const newUserMessage = `[Ada User Baru :D]
-        
-        Assalamu'alaikum Selamat datang di bot kami.
-        
-        Jika kamu baru  masuk, silahkan tulis /register untuk melakukan registrasi 🌟
-        
-        Terima Kasih`;
-    const returningUserMessage = `Hallo ${ctx.currentUser?.nama_panggilan}\nSelamat datang kembali di bot ini`;
+    const newUserMessage = `${this.infoServices.getCellValueByCellPosition("A4")}`;
+    const returningUserMessage = `Assalamu'alaikum ${ctx.currentUser?.nama_panggilan}\nSelamat datang kembali 👋 ${TextUtils.watermark}`;
 
     const payload = ctx.payload;
     switch (payload) {
@@ -102,6 +96,8 @@ class InfoControllers {
 
       case "TambahSuratKeluar":
         return stage.enter("tambah_surat_keluar");
+      case "KonfirmasiInventaris":
+        return stage.enter("konfirmasi_inventaris_sekre");
 
       default:
         const keyboard = [];
@@ -130,6 +126,8 @@ class InfoControllers {
 
         if (ctx.update.callback_query != null) {
           return ctx.editMessageText(message, {
+            parse_mode: "HTML",
+
             reply_markup: markup.inlineKeyboard(keyboard),
           });
         }

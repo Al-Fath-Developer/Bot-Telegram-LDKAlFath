@@ -44,7 +44,7 @@ registerRequired(ctx){
     const user = ctx.currentUser
     if (user == null){
     
-         ctx.reply("Fitur ini terbatas untuk user yang telah melakukan registrasi. Silahkan lakukan registrasi dengan menuli /register")
+         ctx.reply("Fitur ini terbatas untuk user yang telah melakukan registrasi. Silahkan /register pada kolom chat untuk melakukan registrasi jika kamu pengurus aktif LDK Al-Fath 2024")
          throw Error("Akun ini belum melakukan registrasi")
     }
     return user
@@ -169,7 +169,7 @@ user.amanah
       sendEmail(email, token) {
         try {
                 const urlsendbot = getMapENV('BOT_TELEGRAM_URL') +  "?text="
-                  var html = HtmlService.createTemplateFromFile('9. Verifikasi Email Template').getRawContent()
+                  let html = HtmlService.createTemplateFromFile('9. Verifikasi Email Template').getRawContent()
                   html = html.replace("${token}", token)
                   html = html.replace("${token}", token)
                   html = html.replace("${urlsendbot}", urlsendbot)

@@ -395,7 +395,7 @@ CACHE_DURATION: 3600,
  * Mereset semua data dalam cache atau cache tertentu
  * @param {Object} [criteria] - Kriteria untuk mereset cache tertentu
  */
-resetAllCache: (criteria = null) => {
+resetAllCache(criteria = null) {
     const cache = CacheService.getScriptCache();
     
     if (criteria === null) {

@@ -3,12 +3,13 @@
  * @param {object} msg - The message object containing the chat ID and message ID.
  * @param {string} new_text - The new text to replace the existing message text.
  */
-function editMessageTextFromMSG(msg, new_text){
+function editMessageTextFromMSG(msg, new_text, obj = {}){
 
     bot.telegram.callApi("editMessageText", {
         chat_id: msg.result.chat.id,
         message_id: msg.result.message_id,
-        text: new_text
+        text: new_text,
+        ...obj
     
        })
     }
@@ -18,12 +19,13 @@ function editMessageTextFromMSG(msg, new_text){
  * @param {number} message_id - The ID of the message.
  * @param {string} new_text - The new text to replace the existing message text.
  */
-function editMessageTextFromChatAndMessageId(chat_id, message_id, new_text){
+function editMessageTextFromChatAndMessageId(chat_id, message_id, new_text, obj = {}){
 
     bot.telegram.callApi("editMessageText", {
         chat_id: chat_id,
         message_id: message_id,
-        text: new_text
+        text: new_text,
+        ...obj
     
        })
     }
@@ -46,18 +48,24 @@ function editMessageTextFromChatAndMessageId(chat_id, message_id, new_text){
      */
     function showBotStatus(ctx){
         let action;
-        if(ctx.message.text){
+        if(ctx.message?.text){
             action = 'typing'
         }
-        else if (ctx.update.callback_query){
-            action = 'typing'
-        }else if (ctx.message.photo){
+        else if (ctx.update?.callback_query){
+         return   bot.telegram.callApi("sendChatAction", {
+        
+                chat_id: ctx.update.callback_query.message.chat.id,
+                action: "typing"
+            
+               })
+                   
+         }else if (ctx.message?.photo){
             action = 'upload_photo'
-        }else if (ctx.message.document){
+        }else if (ctx.message?.document){
             action = 'upload_document'
-        }else if (ctx.message.voice){
+        }else if (ctx.message?.voice){
             action = 'upload_voice'
-        }else if (ctx.message.video_note){
+        }else if (ctx.message?.video_note){
             action = 'upload_video_note'
         }else{
             action = 'typing'
@@ -68,7 +76,7 @@ function editMessageTextFromChatAndMessageId(chat_id, message_id, new_text){
        
 
     
-    bot.telegram.callApi("sendChatAction", {
+   return bot.telegram.callApi("sendChatAction", {
         
         chat_id: ctx.message.chat.id,
         action: action

@@ -24,16 +24,17 @@ bot.hear(/#getAyat\s+([^\s]+)/g, (ctx) =>{
 
 })
 bot.action('next_ayat', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
-    ayat_from_user =  TextUtils.getRegexResult(ctx.update.callback_query.message.text)[0]
+    let ayat_from_user =  TextUtils.getRegexResult(ctx.update.callback_query.message.text)[0]
     ayat_from_user++
 
     return    ayControllers.getAyat(ctx, ayat_from_user)
 
 })
 bot.action('prev_ayat', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
+
 
     ayat_from_user =  TextUtils.getRegexResult(ctx.update.callback_query.message.text)[0]
     ayat_from_user--
@@ -42,32 +43,32 @@ bot.action('prev_ayat', (ctx)=>{
 
 })
 bot.action('next_page_alquran', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
-    page_from_user =  TextUtils.getRegexResult(ctx.update.callback_query.message.text)[0]
+    let page_from_user =  TextUtils.getRegexResult(ctx.update.callback_query.message.text)[0]
     page_from_user++
 
     return    ayControllers.getPage(ctx, page_from_user)
 
 })
 bot.action('prev_page_alquran', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
-    page_from_user =  TextUtils.getRegexResult(ctx.update.callback_query.message.text)[0]
+    let page_from_user =  TextUtils.getRegexResult(ctx.update.callback_query.message.text)[0]
     page_from_user--
 
     return    ayControllers.getPage(ctx, page_from_user)
 
 })
 bot.action('start_quran', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
     
 
     return    ayControllers.getPage(ctx, 1)
 
 })
 bot.action('start_kajian', (ctx)=>{
-    showTypingStatus(ctx)
+    showBotStatus(ctx)
 
     return ayControllers.getKajian(ctx)
 }   )

@@ -32,7 +32,10 @@ Nama Sekretaris: [fulan2]
 - Dokumen Berita Acara Insya Allah akan dikirim melalui email yang tertera
 - Untuk proker fakultas, Asal Departemen/Fakultas diisi dengan singaktan fakultas. misal FIF
 - Rangkaian kegiatan bisa diisi dengan link dokumentasi
-- tulis "batal" (tanpa tanda petik) pada kolom chat jika ingin membatalkan proses`;
+- tulis "batal" (tanpa tanda petik) pada kolom chat jika ingin membatalkan proses
+
+${TextUtils.watermark}
+`;
         this.chatTexts = {
             beritaAcara: {
                 initial: "Terima Kasih telah mengisi berita acara. tunggu yaa...",
@@ -49,8 +52,12 @@ Contoh kode nomor surat: SRT-001/PRADA/ALFATH-UNITEL/V/2024
 
 *Note: 
 - Jika nomor surat tidak ada, bisa diisi dengan perihal
-- tulis "batal" (tanpa tanda petik) pada kolom chat jika ingin membatalkan proses`,
-                success: "Terima kasih sudah mengisi, {fileType} nya bisa diakses disini\n",
+- tulis "batal" (tanpa tanda petik) pada kolom chat jika ingin membatalkan proses
+
+${TextUtils.watermark}
+
+`,
+                success: `Terima kasih sudah mengisi, {fileType} nya bisa diakses disini\n\n<a href="{url}">{name}</a>\n\n${TextUtils.watermark}`  ,
                 error: "Maaf, hanya bisa menerima file berupa foto dan dokumen",
                 cancel: "Proses dibatalkan",
             },
@@ -66,21 +73,24 @@ Contoh kode nomor surat: SRT-001/PRADA/ALFATH-UNITEL/V/2024
             "buat_berita_acara",
             (ctx) => {
                 const pesan_bot = ctx.reply(this.template_berita_acara);
+                ctx.data = {};
+                ctx.data.pesan_bot = pesan_bot
                 return ctx.wizard.next();
             },
             (ctx) => {
-                ctx.deleteMessage(ctx.update.message.message_id - 1); // nge hapus 1 chat sebelum chat terakhir
+                ctx.deleteMessage(ctx.data.pesan_bot.result.message_id);
                 try {
                     if (ctx.message.text != null && ctx.message.text.toLowerCase() == "batal") {
                         ctx.reply(this.chatTexts.beritaAcara.cancel);
                         return ctx.wizard.leave();
                     }
 
-                    ctx.reply(this.chatTexts.beritaAcara.initial);
+                    const pesan_bot = ctx.reply(this.chatTexts.beritaAcara.initial);
                     const beritaAcara = this.suratMenyuratServices.getBeritaAcaraRegexResult(ctx.message.text, this.template_berita_acara);
                     beritaAcara.id_telegram = ctx.from.id;
                     this.suratMenyuratServices.createBeritaAcara(beritaAcara);
-                    ctx.reply(this.chatTexts.beritaAcara.success);
+                    editMessageTextFromMSG(pesan_bot, this.chatTexts.beritaAcara.success);
+                    memberiLikeFromCtx(ctx)
 
                     return ctx.wizard.leave();
                 } catch (error) {
@@ -99,46 +109,45 @@ Contoh kode nomor surat: SRT-001/PRADA/ALFATH-UNITEL/V/2024
         return new Scene(
             "tambah_surat_keluar",
             (ctx) => {
-                ctx.reply(this.chatTexts.suratKeluar.initial);
+                ctx.data = {};
+                ctx.data.pesan_bot = ctx.reply(this.chatTexts.suratKeluar.initial);
+                
                 return ctx.wizard.next();
             },
             (ctx) => {
-                ctx.deleteMessage(ctx.update.message.message_id - 1); // nge hapus 1 chat sebelum chat terakhir
+                ctx.deleteMessage(ctx.data.pesan_bot.result.message_id); // nge hapus 1 chat sebelum chat terakhir
 
-                ctx.reply("tunggu sebentar...");
+                UserUtils.registerRequired(ctx)
+                ctx.data.pesan_bot =  ctx.reply("tunggu sebentar...");
                 try {
                     if (ctx.message.text != null && ctx.message.text.toLowerCase() == "batal") {
-                        ctx.reply(this.chatTexts.suratKeluar.cancel);
+                        editMessageTextFromMSG(ctx.data.pesan_bot, this.chatTexts.suratKeluar.cancel);
                         return ctx.wizard.leave();
                     }
 
-                    if (ctx.update.message.photo != null) {
-                        const idx_best_qulity = ctx.update.message.photo.length - 1;
-                        const id_photo = ctx.update.message.photo[idx_best_qulity].file_id;
-                        const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, id_photo);
-                        const caption = ctx.message.caption || "";
 
-                        const drive_url = this.suratMenyuratServices.addSuratKeluar(ctx.from.id, ctx.from.username, url_file, caption);
-                        ctx.reply(this.chatTexts.suratKeluar.success.replace("{fileType}", "foto"), {
-                            reply_markup: markup.inlineKeyboard([[button.url(caption, drive_url)]]),
+                    if (ctx.update.message?.photo != null || ctx.update.message?.document != null) {
+
+                        const caption = ctx.message.caption || ctx.message?.document?.filename ||"";
+                        const drive_url = FileUtils.getDriveURLFromCtx(ctx,getMapENV('SURAT_KELUAR_FOLDER_ID'),caption,ctx.currentUser.email)
+
+                        this.suratMenyuratServices.addSuratKeluar(ctx.from.id, ctx.from.username, drive_url, caption);
+                        this.chatTexts.suratKeluar.success = this.chatTexts.suratKeluar.success.replace("{url}", drive_url)
+                        this.chatTexts.suratKeluar.success = this.chatTexts.suratKeluar.success.replace("{name}", caption)
+                        editMessageTextFromMSG(ctx.data.pesan_bot, this.chatTexts.suratKeluar.success.replace("{fileType}", "surat keluar"), {
+                            parse_mode: "HTML",
                         });
+                        ;
                         ctx.deleteMessage();
-                    } else if (ctx.update.message.document != null) {
-                        const id_document = ctx.update.message.document.file_id;
-                        const url_file = FileUtils.getFileUrlFromMsgBotTelegram(ctx.tg.token, id_document);
-                        const filename = ctx.update.message.document.file_name;
-                        const drive_url = this.suratMenyuratServices.addSuratKeluar(ctx.from.id, ctx.from.username, url_file, filename);
-                        ctx.reply(this.chatTexts.suratKeluar.success.replace("{fileType}", "dokumen"), {
-                            reply_markup: markup.inlineKeyboard([[button.url(filename, drive_url)]]),
-                        });
-                        ctx.deleteMessage();
+                    
                     } else {
-                        ctx.reply(this.chatTexts.suratKeluar.error);
+                        editMessageTextFromMSG(ctx.data.pesan_bot, this.chatTexts.suratKeluar.error);
                     }
 
                     return ctx.wizard.leave();
                 } catch (error) {
                     errorLog(error);
+                    ctx.reply(error.message)
                     return ctx.wizard.leave();
                 }
             }

@@ -10,7 +10,7 @@ class InfoServices{
      * @returns {String} isi sel
      */
     getCellValueByCellPosition(cellPosition){
-        return  this.infoRepository.getCellValueByCellPosition(cellPosition)
+        return  this.infoRepository.getCellValueByCellPosition(cellPosition)  + TextUtils.watermark    //nitambah wm
     }
 
 }

@@ -12,13 +12,13 @@ class SuratMenyuratServices{
      *  fungsi untuk menyimpan dokumentasi dan mendapatkan link hasil dokumentasi belajar
      * @param {number} id_telegram 
      * @param {string} username 
-     * @param {string} url_file 
+     * @param {string} drive_url 
      * @param {string} caption 
      * @returns string Link drive
      */
-    addSuratKeluar(id_telegram, username, url_file, caption){
+    addSuratKeluar(id_telegram, username, drive_url, caption){
         const arrCaption = TextUtils.pisahKodeNomorSurat(caption)
-        return this.suratMenyuratRepository.saveSuratKeluar(id_telegram, username, url_file, arrCaption)
+        return this.suratMenyuratRepository.saveSuratKeluar(id_telegram, username, drive_url, arrCaption)
 
     }
 

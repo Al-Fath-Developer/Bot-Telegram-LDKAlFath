@@ -6,11 +6,12 @@ class PresensiControllers {
         this.processJawabanScene = this.processJawabanScene.bind(this);
         this.finalScene = this.finalScene.bind(this);
         this.chatTexts = {
-            tambahAdminPresensi: "Silahkan foto sekitar kamu yang menggambarkan posisi kamu sedang menjadi Admin Presensi dengan caption nama kepanitiaan",
+            tambahAdminPresensi: "🗒️Admin Presensi LDK Al-Fath 2024\n\nSilahkan foto sekitar kamu yang menggambarkan posisi kamu sedang menjadi Admin Presensi dengan caption nama kepanitiaan",
             error: "Maaf, ada kesalahan: ",
             fileRequired: "Maaf, kamu harus mengirimkan file untuk melanjutkan. Silahkan ulangi dari awal",
             thanks: "Terima Kasih. Jawaban kamu tersimpan pada baris ke-",
-            scanQR: "Berikut merupakan web untuk melakukan scan qr presensi",
+            scanQR: "Berikut merupakan web untuk melakukan scan qr presensi" + TextUtils.watermark 
+            ,
             loading: "Tunggu sebentar..."
         };
     }
@@ -38,6 +39,9 @@ class PresensiControllers {
                     ctx.message.caption + ctx.currentUser.nama_lengkap,
                     ctx.currentUser.email
                 );
+                if (link_drive === null) {
+                    throw new UserInputError(this.chatTexts.fileRequired);
+                }
                 arrJawaban.push(link_drive);
                 // Process the link data
                 // Send the data to the desired sheet
@@ -46,8 +50,7 @@ class PresensiControllers {
                 return ctx.wizard.leave();
             }
             const lastRow = this.presensiServices.addAdminPresensi(arrJawaban);
-
-            ctx.replyWithHTML(this.chatTexts.thanks + lastRow);
+            editMessageTextFromMSG(loading, this.chatTexts.thanks + lastRow);
             ctx.replyWithHTML(this.chatTexts.scanQR, {
                 reply_markup: {
                     inline_keyboard: [
@@ -62,8 +65,8 @@ class PresensiControllers {
                     ],
                 },
             });
+            
             ctx.deleteMessage(loading.result.message_id);
-
             return ctx.wizard.leave();
         } catch (error) {
             ctx.reply(this.chatTexts.error + error.message);

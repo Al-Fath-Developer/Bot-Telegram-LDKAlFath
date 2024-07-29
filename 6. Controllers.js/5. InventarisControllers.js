@@ -22,10 +22,12 @@ Silahkan konfirmasi berupa dokumentasi inventaris dengan ketentuan sebagai berik
 *Note: 
 - tulis "batal" (tanpa tanda petik) pada kolom chat jika ingin membatalkan proses
 
+${TextUtils.watermark}
+
 `;
 
         this.prosesDibatalkanText = "Proses dibatalkan";
-        this.terimaKasihText = "Terima kasih sudah konfirmasi, lah kok ilang? tenang, bukti konfirmasi nya bisa diakses disini\n";
+        this.terimaKasihText = `Terima kasih sudah konfirmasi, lah kok ilang? tenang, bukti konfirmasi nya bisa diakses disini\n<a href="{url}">{name}</a>\n\n${TextUtils.watermark}`        ;
     }
 
     /**
@@ -36,9 +38,9 @@ Silahkan konfirmasi berupa dokumentasi inventaris dengan ketentuan sebagai berik
         return new Scene(
             'konfirmasi_inventaris_sekre',
             (ctx) => {
-                const pesan_bot = ctx.replyWithHTML(this.konfirmasiInventarisText);
-                UserUtils.registerRequired(ctx);
                 ctx.data = {};
+                ctx.data.pesan_bot  = ctx.replyWithHTML(this.konfirmasiInventarisText);
+                UserUtils.registerRequired(ctx);
                 ctx.data.email = ctx.currentUser.email;
                 ctx.data.nim = ctx.currentUser.nim;
                 ctx.data.nama_lengkap = ctx.currentUser.nama_lengkap;
@@ -48,28 +50,30 @@ Silahkan konfirmasi berupa dokumentasi inventaris dengan ketentuan sebagai berik
             },
 
             (ctx) => {
-                ctx.deleteMessage(ctx.update.message.message_id - 1); // nge hapus 1 chat sebelum chat terakhir
+                ctx.deleteMessage(ctx.data.pesan_bot.result.message_id); 
+
                 const loading_message = ctx.reply("tunggu sebentar...");
                 try {
                     if (ctx.message.text != null && ctx.message.text.toLowerCase() == "batal") {
-                        ctx.reply(this.prosesDibatalkanText);
-                        ctx.deleteMessage(loading_message.result.message_id);
+                        editMessageTextFromMSG(loading_message, this.prosesDibatalkanText);
 
                         return ctx.wizard.leave();
                     }
                     const judul = ctx.message.caption || ctx.update.message?.document?.file_name || new Date().toLocaleString();
                     const drive_url = FileUtils.getDriveURLFromCtx(ctx, getMapENV('INVENTARIS_FOLDER_ID'), judul, ctx.data.email);
-                    this.inventarisServices.addKonfirmasiSekre([ctx.data.nim, ctx.data.nama_lengkap], drive_url, judul);
-                    ctx.reply(this.terimaKasihText, {
-                        reply_markup: markup.inlineKeyboard([[button.url(judul, drive_url)]])
+                     this.inventarisServices.addKonfirmasiSekre([ctx.data.nim, ctx.data.nama_lengkap], drive_url, judul);
+                    this.terimaKasihText=  this.terimaKasihText.replace("{url}", drive_url)
+                    this.terimaKasihText =  this.terimaKasihText.replace("{name}", judul)
+                    editMessageTextFromMSG(loading_message, this.terimaKasihText, {
+                        parse_mode: "HTML",
                     });
+                    
                     ctx.deleteMessage();
-                    ctx.deleteMessage(loading_message.result.message_id);
 
                     return ctx.wizard.leave();
                 } catch (error) {
                     errorLog(error);
-                    ctx.deleteMessage(loading_message.result.message_id);
+                    editMessageTextFromMSG(loading_message, "Ada Kesalahan: " + error.message);
 
                     return ctx.wizard.leave();
                 }

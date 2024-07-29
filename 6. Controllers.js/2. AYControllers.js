@@ -38,7 +38,8 @@ class AYControllers {
                     const user = new UserServices().getUserInfoById(id_telegram);
                     if (user) {
                         this.ayServices.setHasRemindByIdTelegram(id_telegram);
-                        pesan = "‼️Reminder AY\n\nHallo " + user.nama_panggilan + "\nJangan lupa buka AY yaa";
+                        pesan = "‼️Reminder AY\n\nHallo " + user.nama_panggilan + "\nJangan lupa buka AY yaa" + TextUtils.watermark
+                        ;
                         bot.telegram.sendMessage(id_telegram, pesan);
                         Logger.log("Hallo" + user.nama_panggilan + "Jangan lupa buka AY yaa");
                     } else {
@@ -61,7 +62,7 @@ class AYControllers {
                 const id_telegram = e[0];
                 const has_remind = e[4];
                 const has_ngaji = e[5];
-                let pesan = "";
+                let pesan = "";   
                 if (!has_ngaji && !has_remind) {
                     const user = new UserServices().getUserInfoById(id_telegram);
                     if (user) {
@@ -108,7 +109,8 @@ Isi Ayat
 <a href="${dataAyat.audio}">${dataAyat.ayat}</a>
 Juz: ${dataAyat.juz}
 <a href="https://quran.com/id/page/${dataAyat.page}">Halaman: ${dataAyat.page}  </a>
-  
+ 
+${TextUtils.watermark}
 `
             );
         } else {
@@ -140,6 +142,9 @@ Isi Ayat
 <a href="${dataAyat.audio}">${dataAyat.ayat}</a>
 Juz: ${dataAyat.juz}
 <a href="https://quran.com/id/page/${dataAyat.page}">Halaman: ${dataAyat.page}  </a>
+
+
+${TextUtils.watermark}
 `  ;
         if (ctx.update.callback_query) {
             ctx.editMessageText(message, {
@@ -213,7 +218,7 @@ Juz: ${dataAyat.juz}
     }
     getKajian(ctx){
 
-        const message = `<code><b>Kajian Islam</b></code>\n\nTekan tombol play pada gambar dibawah ini atau buka melalui link berikut:\n <a href="https://on.soundcloud.com/JD3C8vBZx5dYPnFc8">Kajian Adam dan Akhlak - Ustadz Abdullah Zaen, Lc., MA</a>`;
+        const message = `<code><b>Kajian Islam</b></code>\n\nTekan tombol play pada gambar dibawah ini atau buka melalui link berikut:\n <a href="https://on.soundcloud.com/JD3C8vBZx5dYPnFc8">Kajian Adam dan Akhlak - Ustadz Abdullah Zaen, Lc., MA</a>\n\n\n Sebenernya pingin make sure aja kalo kader Al-Fath tuh tau kalo semua masalah kehidupan tuh ada sousinya dalam islam, jadi ga usah nyari di tempat lain yang belum tentu benar`;
         if (ctx.update.callback_query) {
             ctx.editMessageText(message, {
                 parse_mode: "HTML",
@@ -239,7 +244,7 @@ Juz: ${dataAyat.juz}
             }
             count_ayat++;
         });
-        message = message + `\n\nBanyak ayat yang ditampilkan: ${count_ayat}\nJuz: ${dataAyat.juz}\nHalaman: ${dataAyat.page}\n\n Jazakallah Khairan Katsiran\n\n\nBot Telegram LDK Al-Fath`;
+        message = message + `\n\nBanyak ayat yang ditampilkan: ${count_ayat}\nJuz: ${dataAyat.juz}\nHalaman: ${dataAyat.page}\n\n Jazakallah Khairan Katsiran\n\n\n${TextUtils.watermark}`;
         return message
     }
      arrTombolGantiHalamanQuran(halamansekarang) {

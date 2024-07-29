@@ -1,5 +1,6 @@
 
 const TextUtils = {
+  watermark: "\n\n============\nBot Telegram📱️\n🫱🏻‍🫲🏻LDK Al-Fath",
   regex_template: /\[([^\]]*?)\]/g,
 
   /**

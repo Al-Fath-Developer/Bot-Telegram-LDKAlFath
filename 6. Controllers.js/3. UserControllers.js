@@ -17,7 +17,9 @@ class UserControllers {
             "- jika NIM yang Anda isi valid, maka kode verifikasi akan dikirimkan ke email yang terdaftar pada data di LDK Al-Fath.",
             "- gunakan format seperti pada contoh diatas",
             "- Kurung siku digunakan sebagai tempat pengisian template, jadi jangan dihapus kurung siku nya",
-            "- tulis batal jika ingin membatalkan proses"
+            "- tulis batal jika ingin membatalkan proses",
+            TextUtils.watermark
+
         ];
         this.confirmationEmailMessage = "{Konfirmasi Email}\nSilahkan buka email {email}, lalu kirimkan token pendaftaran ke chat ini";
         this.registrationSuccessMessage = "{Registrasi berhasil}\n Selamat datang {nama_panggilan}";
@@ -116,7 +118,6 @@ class UserControllers {
                 });
                 editMessageTextFromMSG(ctx.data.botMessage, this.registrationSuccessMessage.replace("{nama_panggilan}", new_user.nama_panggilan));
 
-                // ctx.reply(this.registrationSuccessMessage.replace("{nama_panggilan}", new_user.nama_panggilan));
             } else {
                 ctx.reply(this.tokenErrorMessage);
             }
