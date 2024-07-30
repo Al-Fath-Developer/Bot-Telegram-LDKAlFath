@@ -30,6 +30,7 @@ class PresensiControllers {
         try {
             const loading = ctx.reply(this.chatTexts.loading);
             UserUtils.registerRequired(ctx);
+            ctx.currentUser.id_telegram = TextUtils.encodeText(ctx.currentUser.id_telegram) 
             const arrJawaban = Object.values(ctx.currentUser);
 
             if (ctx.message.text === undefined) {

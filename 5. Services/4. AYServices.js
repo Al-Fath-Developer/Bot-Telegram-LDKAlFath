@@ -84,7 +84,7 @@ class AYServices  {
      * @returns number
      */
     addNewUser (id_telegram, nim) {
-    id_telegram = TextUtils.encodeText(id_telegram)
+
          return this.ayRepository.addNewUser(id_telegram, nim)
     }
 

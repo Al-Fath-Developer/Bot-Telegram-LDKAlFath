@@ -1,6 +1,6 @@
 # Folder
 node_modules/*
-
+x. catatan/*
 # File
 .clasp.json
 1. debug.js
@@ -8,3 +8,6 @@ deploy.sh
 0. env.js
 0. env.js
 .clasprc.json
+deploy production.sh
+.clasp.production
+0. env.production
