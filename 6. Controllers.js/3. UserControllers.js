@@ -21,8 +21,8 @@ class UserControllers {
             TextUtils.watermark
 
         ];
-        this.confirmationEmailMessage = "{Konfirmasi Email}\nSilahkan buka email {email}, lalu kirimkan token pendaftaran ke chat ini";
-        this.registrationSuccessMessage = "{Registrasi berhasil}\n Selamat datang {nama_panggilan}";
+        this.confirmationEmailMessage = "📩Konfirmasi Email📩\nSilahkan buka email {email}, lalu kirimkan token pendaftaran ke chat ini";
+        this.registrationSuccessMessage = "👋👋Registrasi berhasil\n Alhamdulillah, proses registrasi selesai. \n Selamat datang {nama_panggilan}\n\n oh iya ada titipan, id kamu di Al-Fath adalah: {id}, tolong simpan id ini yaa";
         this.registrationErrorMessage = "‼️Kesalahan‼\n\n{error_message}\nSilahkan lakukan registrasi ulang";
         this.tokenErrorMessage = "‼️Kesalahan‼️\nToken salah\nSilahkan lakukan registrasi ulang";
         this.updateMessages = [
@@ -116,6 +116,7 @@ class UserControllers {
                     wilayah: ctx.data.user.wilayah,
                     amanah: ctx.data.user.amanah,
                 });
+                this.registrationSuccessMessage = this.registrationSuccessMessage.replace("{id}", ctx.data.user.id_kader);
                 editMessageTextFromMSG(ctx.data.botMessage, this.registrationSuccessMessage.replace("{nama_panggilan}", new_user.nama_panggilan));
 
             } else {

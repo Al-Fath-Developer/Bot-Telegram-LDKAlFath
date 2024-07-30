@@ -42,7 +42,7 @@ class SoalIsianSingkatControllers {
         if (isGuest){
             data.template_pertanyaan = "*Data Diri Pengguna Tanpa Registrasi*\n\nNama: [nama]\n\n" + data.template_pertanyaan
         }
-        const pesan = ctx.replyWithMarkdown(data.template_pertanyaan);
+        const pesan = ctx.replyWithHTML(data.template_pertanyaan);
         data.soal_message_id = pesan.result.message_id
         return data;
     }
@@ -76,6 +76,9 @@ class SoalIsianSingkatControllers {
                 return ctx.wizard.next();
             } catch (error) {
                 ctx.reply(this.chatTexts.error + error.message);
+                if (error instanceof UserInputError) {
+                    ctx.reply("saran: "+ error.recommendation);
+                }
                 return ctx.wizard.leave();
             }
         }, this.processAnswer, this.processLocationOrDriveLink);
@@ -162,6 +165,9 @@ class SoalIsianSingkatControllers {
             return ctx.wizard.leave();
         } catch (error) {
             ctx.reply(this.chatTexts.error + error.message);
+            if (error instanceof UserInputError) {
+                ctx.reply("saran: "+ error.recommendation);
+            }
             return ctx.wizard.leave();
         }
     }
@@ -197,6 +203,9 @@ class SoalIsianSingkatControllers {
             return ctx.wizard.leave();
         } catch (error) {
             ctx.reply(this.chatTexts.error + error.message);
+            if (error instanceof UserInputError) {
+                ctx.reply("saran: "+ error.recommendation);
+            }
             return ctx.wizard.leave();
         }
     }

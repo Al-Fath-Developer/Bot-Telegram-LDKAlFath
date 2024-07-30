@@ -14,6 +14,7 @@ class InventarisServices{
      * @returns string Link drive
      */
      addKonfirmasiSekre(identitas, url_file, filename){
+        
         const arrFilename = TextUtils.pisahKataPertama(filename)
         return this.inventarisRepository.addKonfirmasiSekre(identitas, url_file, arrFilename)
 

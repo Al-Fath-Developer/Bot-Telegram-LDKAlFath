@@ -2,10 +2,10 @@ class User {
       /**
      * Creates a new User instance using the provided parameters.
       * @param {Object} userData - The user data.
-     * @param {number} userData.id_telegram - The Telegram ID of the user.
+      * @param {number} userData.id_telegram - The Telegram ID of the user.
+     * @param {string} userData.nim - The student ID of the user.
      * @param {string} userData.nama_lengkap - The full name of the user.
      * @param {string} userData.nama_panggilan - The nickname of the user.
-     * @param {string} userData.nim - The student ID of the user.
      * @param {string} userData.jenis_kelamin - The gender of the user.
      * @param {string} userData.email - The email of the user.
      * @param {string} userData.angkatan - angkatan user
@@ -13,14 +13,15 @@ class User {
      * @param {string} userData.departemen - departemen atau bidang kader
      * @param {string} userData.wilayah - berisi pusat / fakultas
      * @param {string} userData.amanah - berisi amanah dari kader
+     * @param {string} userData.id_kader - berisi amanah dari kader
      * @returns {User} A new User instance.
      */
 
-      constructor({id_telegram, nama_lengkap, nama_panggilan, nim, jenis_kelamin, email, angkatan, fakultas, departemen, wilayah, amanah}){
+      constructor({id_telegram, nama_lengkap, nama_panggilan, nim, jenis_kelamin, email, angkatan, fakultas, departemen, wilayah, amanah, id_kader}){
         this.id_telegram = id_telegram;
+        this.nim = nim;
         this.nama_lengkap = nama_lengkap;
         this.nama_panggilan = nama_panggilan;
-        this.nim = nim;
         this.jenis_kelamin = jenis_kelamin;
         this.email = email;
         this.angkatan =angkatan 
@@ -28,6 +29,7 @@ class User {
         this.departemen =departemen 
         this.wilayah =wilayah 
         this.amanah =amanah 
+        this.id_kader =id_kader
     }
      /**
      * nge print data user

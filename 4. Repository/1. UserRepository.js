@@ -5,6 +5,9 @@
 class UserRepository{
     constructor(){
         this.sheet_name =  getMapENV('USER_SHEET_NAME')
+        this.raw_sheet_name =  getMapENV('USER_RAW_SHEET_NAME')
+        this.sheet_range = getMapENV('USER_SHEET_RANGE')
+        this.raw_sheet_range = getMapENV('USER_RAW_SHEET_RANGE')
         this.createNewUser = this.createNewUser.bind(this)
         this.updateUser = this.updateUser.bind(this)
         this.isExist = this.isExist.bind(this)
@@ -83,7 +86,7 @@ class UserRepository{
         .setWilayah(wilayah)
         .setAmanah(amanah)
         .build()
-        SpreadsheetUtils.updateEntryById(id_telegram, UserUtils.userToArray(updatedUser), "Users", "A:K");
+        SpreadsheetUtils.updateEntryById(id_telegram, UserUtils.userToArray(updatedUser), this.sheet_name, this.sheet_range);
         // return "hallo"
         return updatedUser
 
@@ -97,7 +100,7 @@ class UserRepository{
      * @returns {boolean} - True jika pengguna sudah ada, false jika tidak.
      */
      isExist(id_telegram){
-        let data = SpreadsheetUtils.searchEntries({id_telegram: id_telegram}, "Users", "A:A");
+        let data = SpreadsheetUtils.searchEntries({id_telegram: id_telegram}, this.sheet_name, "A:A");
         return data.length > 0;
 
 
@@ -110,7 +113,7 @@ class UserRepository{
      */
 
      findById(id_telegram){
-        let data = SpreadsheetUtils.searchEntries({id_telegram: id_telegram}, "Users", "A:K");
+        let data = SpreadsheetUtils.searchEntries({id_telegram: id_telegram},this.sheet_name, this.sheet_range);
         if (data[0]){
             return  UserUtils.arrayToUser(data[0]);
         }
@@ -119,8 +122,9 @@ class UserRepository{
     getRawUserByNIM(nim){
         try {
             
-            let data = SpreadsheetUtils.readEntryById(nim, "Raw Users","A:I",true)
+            let data = SpreadsheetUtils.readEntryById(nim, this.raw_sheet_name,this.raw_sheet_range,true)
             const user = new UserBuilder()
+            
             .setNim(data[0])
             .setNamaLengkap(data[1])
             .setJenisKelamin(data[2])
@@ -130,6 +134,7 @@ class UserRepository{
             .setWilayah(data[6])
             .setAmanah(data[7])
             .setEmail(data[8])
+            .setIdKader(data[9])
             .build()
             return user
         } catch (error) {

@@ -27,7 +27,7 @@ ${TextUtils.watermark}
 `;
 
         this.prosesDibatalkanText = "Proses dibatalkan";
-        this.terimaKasihText = `Terima kasih sudah konfirmasi, lah kok ilang? tenang, bukti konfirmasi nya bisa diakses disini\n<a href="{url}">{name}</a>\n\n${TextUtils.watermark}`        ;
+        this.terimaKasihText = `Terima kasih sudah konfirmasi, lah kok ilang? tenang, bukti konfirmasi nya bisa diakses disini\n<a href="{url}">{name}</a>\n${TextUtils.watermark}`        ;
     }
 
     /**

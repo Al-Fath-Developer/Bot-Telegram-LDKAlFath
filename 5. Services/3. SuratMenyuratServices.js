@@ -17,6 +17,7 @@ class SuratMenyuratServices{
      * @returns string Link drive
      */
     addSuratKeluar(id_telegram, username, drive_url, caption){
+        id_telegram = TextUtils.encodeText(id_telegram)
         const arrCaption = TextUtils.pisahKodeNomorSurat(caption)
         return this.suratMenyuratRepository.saveSuratKeluar(id_telegram, username, drive_url, arrCaption)
 

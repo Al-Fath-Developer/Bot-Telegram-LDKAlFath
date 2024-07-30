@@ -33,10 +33,11 @@ class SoalIsianSingkatServices{
      * @returns {number} Nomor baris terakhir yang ditambahkan
      */
     addAnswerFromUser(id_telegram, user, arrAnswer, spreadsheet_hasil_link, sheet_hasil_name){
+      delete user.id_telegram
       
       const arrUser = Object.values(user)
 
-        const result = [new Date(), Utilities.base64Encode( id_telegram), ...arrUser, ...arrAnswer]
+        const result = [new Date(), TextUtils.encodeText( id_telegram), ...arrUser, ...arrAnswer]
         const lastRow = this.soalIsianSingkatRepo.addAnswerFromUser(result,spreadsheet_hasil_link, sheet_hasil_name )
         return lastRow
         
@@ -51,9 +52,10 @@ class SoalIsianSingkatServices{
      * @returns {number} Nomor baris terakhir yang ditambahkan
      */
     addAnswerFromUserGuest(id_telegram,  arrAnswer, spreadsheet_hasil_link, sheet_hasil_name){
+      sheet_hasil_name  = sheet_hasil_name + "(From Guest)"
       
 
-        const result = [new Date(), Utilities.base64Encode( id_telegram), ...arrAnswer]
+        const result = [new Date(), TextUtils.encodeText( id_telegram), ...arrAnswer]
         const lastRow = this.soalIsianSingkatRepo.addAnswerFromUser(result,spreadsheet_hasil_link, sheet_hasil_name )
         return lastRow
         

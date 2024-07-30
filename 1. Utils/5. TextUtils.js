@@ -1,5 +1,8 @@
 
 const TextUtils = {
+  encodeText(text) {
+    return Utilities.base64Encode( text)
+  },
   watermark: "\n\n============\nBot Telegram📱️\n🫱🏻‍🫲🏻LDK Al-Fath",
   regex_template: /\[([^\]]*?)\]/g,
 
@@ -23,17 +26,17 @@ const TextUtils = {
       const templateParts = template.match(TextUtils.regex_template);
       
       if (!templateParts || result.length !== templateParts.length) {
-        throw new UserInputError(`Jumlah jawaban tidak sesuai dengan template. Anda baru memasukkan ${result.length} jawaban yang seharusnya ada ${templateParts.length} jawaban. Catatan: Setiap jawaban harus berada dalam kurung siku`);
+        throw new UserInputError(`Jumlah jawaban tidak sesuai dengan template. Anda baru memasukkan ${result.length} jawaban yang seharusnya ada ${templateParts.length} jawaban. Catatan: Setiap jawaban harus berada dalam kurung siku`,"Silahkan ulangi proses dari awal");
       }
 
       for (let i = 0; i < result.length; i++) {
         if (result[i].trim() === "") {
-          throw new UserInputError(`Jawaban ke-${i + 1} tidak boleh kosong.`);
+          throw new UserInputError(`Jawaban ke-${i + 1} tidak boleh kosong.`, "Silahkan ulangi proses dari awal");
         }
 
         const expectedFormat = this.getExpectedFormat(templateParts[i].slice(1, -1));
         if (!this.validateFormat(result[i], expectedFormat)) {
-          throw new UserInputError(`Format jawaban ke-${i + 1} tidak sesuai. Diharapkan: ${expectedFormat}`);
+          throw new UserInputError(`Format jawaban ke-${i + 1} tidak sesuai. Diharapkan: ${expectedFormat}`, "Silahkan ulangi proses dari awal");
         }else{
           if (expectedFormat == "nomor"){
             result[i] = parseInt(result[i])

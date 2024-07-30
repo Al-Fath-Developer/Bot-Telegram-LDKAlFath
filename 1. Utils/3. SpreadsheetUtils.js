@@ -334,7 +334,7 @@ appendRowDataToExternalSpreadsheet(spreadsheet_url, sheet_name, arrData){
 
     }
     
-    let  sheet = externalSpreadsheet.getSheetByName(sheet_name)
+    let  sheet = externalSpreadsheet.getSheetByName(sheet_name||'From Telegram')
     if (sheet == null){
         sheet = externalSpreadsheet.insertSheet(sheet_name)
     }

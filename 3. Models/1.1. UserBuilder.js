@@ -12,6 +12,10 @@ class UserBuilder {
         this.wilayah = null;
         this.amanah = "Tamu";
     }
+    setIdKader(idKader) {
+        this.id_kader = idKader;
+        return this;
+    }
 
     /**
      * Set the Telegram ID.
@@ -136,6 +140,7 @@ class UserBuilder {
                 departemen: this.departemen,
                 wilayah: this.wilayah,
                 amanah: this.amanah, 
+                id_kader: this?.id_kader
             }
         )
     }

@@ -57,7 +57,7 @@ Contoh kode nomor surat: SRT-001/PRADA/ALFATH-UNITEL/V/2024
 ${TextUtils.watermark}
 
 `,
-                success: `Terima kasih sudah mengisi, {fileType} nya bisa diakses disini\n\n<a href="{url}">{name}</a>\n\n${TextUtils.watermark}`  ,
+                success: `Terima kasih sudah mengisi, {fileType} nya bisa diakses disini\n\n<a href="{url}">{name}</a>\n${TextUtils.watermark}`  ,
                 error: "Maaf, hanya bisa menerima file berupa foto dan dokumen",
                 cancel: "Proses dibatalkan",
             },

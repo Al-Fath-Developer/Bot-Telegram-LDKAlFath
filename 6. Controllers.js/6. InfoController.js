@@ -21,6 +21,8 @@ class InfoControllers {
     }
 
     ctx.editMessageText(listFeature, {
+      parse_mode: "HTML",
+
       reply_markup: markup.inlineKeyboard([
         [button.text("Settingan Telegram ⚙️", "settingan_telegram"), button.text("🔙 Main Menu", "main_menu")],
       ]),
@@ -30,6 +32,8 @@ class InfoControllers {
   getSettinganTelegram(ctx) {
     const settinganTelegram = this.infoServices.getCellValueByCellPosition("A8");
     ctx.editMessageText(settinganTelegram, {
+      parse_mode: "HTML",
+
       reply_markup: markup.inlineKeyboard([
         [button.text("🧾 List Fitur", "list_fitur"), button.text("🔙 Main Menu", "main_menu")],
       ]),
@@ -43,6 +47,8 @@ class InfoControllers {
   getVisiMisi(ctx) {
     const visiMisi = this.infoServices.getCellValueByCellPosition("A6");
     ctx.editMessageText(visiMisi, {
+      parse_mode: "HTML",
+
       reply_markup: markup.inlineKeyboard([[button.text("🔙 Main Menu", "main_menu")]]),
     });
   }
@@ -54,6 +60,8 @@ class InfoControllers {
   getAboutDev(ctx) {
     const aboutDev = this.infoServices.getCellValueByCellPosition("A5");
     ctx.editMessageText(aboutDev, {
+      parse_mode: "HTML",
+
       reply_markup: markup.inlineKeyboard([
         [button.text("About Bot🤖", "about_bot"), button.text("🔙 Main Menu", "main_menu")],
       ]),
@@ -63,6 +71,8 @@ class InfoControllers {
   getAboutBot(ctx) {
     const aboutBot = this.infoServices.getCellValueByCellPosition("A9");
     ctx.editMessageText(aboutBot, {
+      parse_mode: "HTML",
+
       reply_markup: markup.inlineKeyboard([
         [button.text("💻 About Dev", "about_dev"), button.text("🔙 Main Menu", "main_menu")],
       ]),
@@ -76,6 +86,8 @@ class InfoControllers {
   getKritikSaran(ctx) {
     const kritikSaran = this.infoServices.getCellValueByCellPosition("A7");
     ctx.editMessageText(kritikSaran, {
+      parse_mode: "HTML",
+
       reply_markup: markup.inlineKeyboard([[button.text("🔙 Main Menu", "main_menu")]]),
     });
   }

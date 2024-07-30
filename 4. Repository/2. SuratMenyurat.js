@@ -66,7 +66,7 @@ createBeritaAcara(data) {
         };
         SpreadsheetUtils.appendRowDataToExternalSpreadsheet(
             this.spreadsheet_link, this.sheet_name_berita_acara, 
-            [new Date, data.id_telegram, data.nama_kegiatan])
+            [new Date, TextUtils.encodeText(data.id_telegram), data.nama_kegiatan])
                 
         const hasil =   UrlFetchApp.fetch(this.post_berita_acara, options);
         Logger.log(JSON.stringify(hasil))
