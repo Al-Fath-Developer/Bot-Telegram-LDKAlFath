@@ -16,4 +16,17 @@ class PresensiServices{
         return lastRow
         }
 
+        addKonfirmasiKehadiran(id_telegram,arrUser, answer, spreadsheet_hasil_link, sheet_hasil_name){
+            const arrData = [new Date(),   TextUtils.encodeText(id_telegram), ...arrUser, ...answer]
+            return this.presensiRepository.addKonfirmasiKehadiran(arrData, spreadsheet_hasil_link, sheet_hasil_name)
+        }
+        /**
+         * 
+         * @param {String} id_konfirm_kehadiran 
+         * @returns {Object} Konfigurasi konfirmasi kehadiran
+         */
+        getKonfigKonfirmasiKehadiran(id_konfirm_kehadiran){
+            return this.presensiRepository.getKonfigKonfirmasiKehadiran(id_konfirm_kehadiran)
+        }
+
 }

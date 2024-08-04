@@ -14,6 +14,7 @@ const userControllers = new UserControllers();
       soalIsianSingkatControllers.jawabSoal(),
       soalIsianSingkatControllers.jawabSoalGuest(),
       presensiControllers.addAdminPresensi(),
+      presensiControllers.konfirmasiKehadiranPeserta(),
   ]);
 
   bot.use(stage.middleware());

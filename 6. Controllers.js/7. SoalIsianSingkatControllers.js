@@ -125,8 +125,7 @@ class SoalIsianSingkatControllers {
      */
     processAnswer  (ctx)  {
         try {
-            ctx.deleteMessage(ctx.update.message.message_id - 1);
-            ctx.deleteMessage(ctx.data.soal.soal_message_id);
+          
 
             if (ctx.message.text != null && ctx.message.text.toLowerCase() == "batal") {
                 ctx.reply(this.chatTexts.processCancelled);
@@ -134,7 +133,7 @@ class SoalIsianSingkatControllers {
             }
 
             const jawaban = TextUtils.getRegexResult(ctx.message.text, ctx.data.soal.template_pertanyaan);
-
+         
             if (ctx.data.soal.bukti_lokasi) {
                 ctx.data.jawaban = jawaban;
                 ctx.reply(this.chatTexts.locationOrDriveLink, {
@@ -166,9 +165,13 @@ class SoalIsianSingkatControllers {
         } catch (error) {
             ctx.reply(this.chatTexts.error + error.message);
             if (error instanceof UserInputError) {
-                ctx.reply("saran: "+ error.recommendation);
-            }
-            return ctx.wizard.leave();
+                return ctx.reply("silahkan isi lagi")
+ 
+                 }
+                 errorLog(error);
+             return ctx.wizard.leave();
+        
+            
         }
     }
 
@@ -204,9 +207,11 @@ class SoalIsianSingkatControllers {
         } catch (error) {
             ctx.reply(this.chatTexts.error + error.message);
             if (error instanceof UserInputError) {
-                ctx.reply("saran: "+ error.recommendation);
-            }
-            return ctx.wizard.leave();
+                return ctx.reply("silahkan isi lagi")
+ 
+                 }
+                 errorLog(error);
+             return ctx.wizard.leave();
         }
     }
     kirimJawaban(ctx,jawaban, loading = null) {

@@ -78,7 +78,6 @@ ${TextUtils.watermark}
                 return ctx.wizard.next();
             },
             (ctx) => {
-                ctx.deleteMessage(ctx.data.pesan_bot.result.message_id);
                 try {
                     if (ctx.message.text != null && ctx.message.text.toLowerCase() == "batal") {
                         ctx.reply(this.chatTexts.beritaAcara.cancel);
@@ -91,10 +90,12 @@ ${TextUtils.watermark}
                     this.suratMenyuratServices.createBeritaAcara(beritaAcara);
                     editMessageTextFromMSG(pesan_bot, this.chatTexts.beritaAcara.success);
                     memberiLikeFromCtx(ctx)
+                    ctx.deleteMessage(ctx.data.pesan_bot.result.message_id);
 
                     return ctx.wizard.leave();
                 } catch (error) {
                     ctx.reply(this.chatTexts.beritaAcara.error);
+
                     return ctx.wizard.leave();
                 }
             }
@@ -115,7 +116,6 @@ ${TextUtils.watermark}
                 return ctx.wizard.next();
             },
             (ctx) => {
-                ctx.deleteMessage(ctx.data.pesan_bot.result.message_id); // nge hapus 1 chat sebelum chat terakhir
 
                 UserUtils.registerRequired(ctx)
                 ctx.data.pesan_bot =  ctx.reply("tunggu sebentar...");
@@ -143,6 +143,7 @@ ${TextUtils.watermark}
                     } else {
                         editMessageTextFromMSG(ctx.data.pesan_bot, this.chatTexts.suratKeluar.error);
                     }
+                    ctx.deleteMessage(ctx.data.pesan_bot.result.message_id); // nge hapus 1 chat sebelum chat terakhir
 
                     return ctx.wizard.leave();
                 } catch (error) {

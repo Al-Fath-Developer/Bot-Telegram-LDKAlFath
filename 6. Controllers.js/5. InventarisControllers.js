@@ -50,7 +50,6 @@ ${TextUtils.watermark}
             },
 
             (ctx) => {
-                ctx.deleteMessage(ctx.data.pesan_bot.result.message_id); 
 
                 const loading_message = ctx.reply("tunggu sebentar...");
                 try {
@@ -69,6 +68,7 @@ ${TextUtils.watermark}
                     });
                     
                     ctx.deleteMessage();
+                    ctx.deleteMessage(ctx.data.pesan_bot.result.message_id); 
 
                     return ctx.wizard.leave();
                 } catch (error) {

@@ -59,8 +59,7 @@ class UserControllers {
 
     processRegistration(ctx) {
 
-        
-        ctx.deleteMessage(ctx.data.botMessage.result.message_id);
+      
         
         
         if (ctx.message.text.toLowerCase() == "batal") {
@@ -87,20 +86,37 @@ class UserControllers {
                 throw new UserInputError("\nEmail tidak boleh kosong. \n");
             }
 
+
             ctx.data.user = user;
             ctx.data.random = random;
+            if (ctx.data?.botMessage?.result?.message_id){
+                
+                ctx.deleteMessage(ctx.data.botMessage.result.message_id);
+            }
             ctx.data.botMessage =  ctx.reply(this.confirmationEmailMessage.replace("{email}", user.email));
             return ctx.wizard.next();
         } catch (error) {
             ctx.reply(this.registrationErrorMessage.replace("{error_message}", error.message));
-            errorLog(error);
-            return ctx.wizard.leave();
+            if (error instanceof UserInputError) {
+                return ctx.reply("silahkan isi lagi")
+ 
+                 }
+                 errorLog(error);
+             return ctx.wizard.leave();
+                
+            
+
         }
     };
 
     completeRegistration(ctx) {
         try {
             ctx.deleteMessage();
+            if (ctx.message.text.toLowerCase() == "batal") {
+                ctx.reply(this.cancelMessage);
+                
+                return ctx.wizard.leave();
+            }
 
             if (ctx.message.text == ctx.data.random) {
                 const new_user = this.userServices.createNewUser({
@@ -124,8 +140,13 @@ class UserControllers {
             }
             return ctx.wizard.leave();
         } catch (error) {
-            errorLog(error);
-            return ctx.wizard.leave();
+            if (error instanceof UserInputError) {
+                return ctx.reply("silahkan isi lagi")
+ 
+                 }
+                 errorLog(error);
+             return ctx.wizard.leave();
+
         }
     };
 
@@ -173,9 +194,13 @@ class UserControllers {
             return ctx.wizard.leave();
         } catch (error) {
             ctx.reply(this.updateErrorMessage.replace("{error_message}", error.message));
-            errorLog(error);
-            return ctx.wizard.leave();
-        }
+            if (error instanceof UserInputError) {
+                return ctx.reply("silahkan isi lagi")
+ 
+                 }
+                 errorLog(error);
+             return ctx.wizard.leave();
+             }
     };
 }
 
