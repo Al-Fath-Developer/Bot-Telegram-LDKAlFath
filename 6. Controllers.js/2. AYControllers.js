@@ -218,7 +218,7 @@ ${TextUtils.watermark}
     }
     getKajian(ctx){
 
-        const message = `<code><b>Kajian Islam</b></code>\n\nTekan tombol play pada gambar dibawah ini atau buka melalui link berikut:\n <a href="https://on.soundcloud.com/JD3C8vBZx5dYPnFc8">Kajian Adam dan Akhlak - Ustadz Abdullah Zaen, Lc., MA</a>\n\n\n Sebenernya pingin make sure aja kalo kader Al-Fath tuh tau kalo semua masalah kehidupan tuh ada sousinya dalam islam, jadi ga usah nyari di tempat lain yang belum tentu benar`;
+        const message = `<code><b>Kajian Islam</b></code>\n\nTekan tombol play pada gambar dibawah ini atau buka melalui link berikut:\n <a href="https://on.soundcloud.com/JD3C8vBZx5dYPnFc8">Kajian Adam dan Akhlak - Ustadz Abdullah Zaen, Lc., MA</a>\n\n\n Sebenernya pingin make sure aja kalo kader Al-Fath tuh tau kalo semua masalah kehidupan tuh ada solusinya dalam islam, jadi ga usah nyari di tempat lain yang belum tentu benar`;
         if (ctx.update.callback_query) {
             ctx.editMessageText(message, {
                 parse_mode: "HTML",

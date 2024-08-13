@@ -17,7 +17,7 @@ class InfoControllers {
   getListFeature(ctx) {
     const listFeature = this.infoServices.getCellValueByCellPosition("A2");
     if (ctx.message && ctx.message.text) {
-      return ctx.reply(listFeature);
+      return ctx.replyWithHTML(listFeature);
     }
 
     ctx.editMessageText(listFeature, {

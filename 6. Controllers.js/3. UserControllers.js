@@ -9,10 +9,10 @@ class UserControllers {
 
         this.template_data_user = "Nama Panggilan: [Fulan]\nNIM: [11111]";
         this.registrationMessages = [
-            "*Registrasi Akun*",
-            "Silahkan melakukan data diri kamu dengan template sebagai berikut:\n\n\n",
+            "📝📝Registrasi Akun📓📓\n",
+            "Silahkan melakukan data diri kamu dengan template sebagai berikut:\n",
             this.template_data_user,
-            "\n\n\n\n\n*note",
+            "\n*note",
             "- NIM harus terdaftar sebagai pengurus LDK Al-Fath.",
             "- jika NIM yang Anda isi valid, maka kode verifikasi akan dikirimkan ke email yang terdaftar pada data di LDK Al-Fath.",
             "- gunakan format seperti pada contoh diatas",

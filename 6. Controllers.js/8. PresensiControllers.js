@@ -116,23 +116,18 @@ class PresensiControllers {
                                 text: "Insya Allah Hadir",
 
                             },
-                           
-                        ],,
-                        [
                             {
                                 text: "batal",
+
                             },
-                        ],
-                        [
-                            {
-                                text: "Batal",
-                            },
+                            
+                           
                         ]
                     ],
                     one_time_keyboard: true,
                 },
             });
-            ctx.reply("Jika Anda tidak bisa hadir, jawab pesan ini dengan alasan Anda tidak bisa hadir. Tulis 'batal' Jika Anda ingin membatalkan proses");
+            ctx.reply("Secara Default, sistem akan menampilkan saran jawaban apa yang seharusnya diisi. Tetapi jika Anda memiliki jawaban lain, silahkan tulis saja di chat ini. Bahkan Anda bisa mengirimkan gambar dengan caption untuk meeperkuat alasan Anda (misal surat izin atau lainnya)");
             return ctx.wizard.next();
         } catch (error) {
             ctx.reply(this.chatTexts.error + error.message);

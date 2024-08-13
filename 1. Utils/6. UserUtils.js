@@ -44,7 +44,8 @@ registerRequired(ctx){
     const user = ctx.currentUser
     if (user == null){
     
-         ctx.reply("Fitur ini terbatas untuk user yang telah melakukan registrasi. Silahkan /register pada kolom chat untuk melakukan registrasi jika kamu pengurus aktif LDK Al-Fath 2024")
+         ctx.reply("Fitur ini terbatas untuk user yang telah melakukan registrasi. Silahkan /register pada kolom chat untuk melakukan registrasi jika kamu pengurus aktif LDK Al-Fath 2024\n\n Jika Anda telah selesai melakukan registrasi, silahkan kirimkan perintah yang Anda masukan sebelumnya")
+         
          throw Error("Akun ini belum melakukan registrasi")
     }
     return user
